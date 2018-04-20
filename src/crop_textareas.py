@@ -15,18 +15,30 @@ Adapted to Python 3 by Lui Pillmann (https://github.com/luipillmann)
 '''
 
 import glob
-import os
-import random
 import sys
 import random
-import math
-import json
-from collections import defaultdict
 
 import cv2
 from PIL import Image, ImageDraw
-import numpy as np
 from scipy.ndimage.filters import rank_filter
+import pytesseract
+import numpy as np
+from scipy import ndimage
+
+def faster_bradley_threshold(image, threshold=75, window_r=5):
+    percentage = threshold / 100.
+    window_diam = 2*window_r + 1
+    # convert image to numpy array of grayscale values
+    img = np.array(image.convert('L')).astype(np.float)  # float for mean precision
+    # matrix of local means with scipy
+    means = ndimage.uniform_filter(img, window_diam)
+    # result: 0 for entry less than percentage*mean, 255 otherwise
+    height, width = img.shape[:2]
+    result = np.zeros((height,width), np.uint8)   # initially all 0
+    result[img >= percentage * means] = 255       # numpy magic :)
+    # convert back to PIL image
+    return Image.fromarray(result)
+
 
 
 def dilate(ary, N, iterations): 
@@ -132,7 +144,6 @@ def find_components(edges, max_components=16):
     print(dilation)
     Image.fromarray(edges).show()
     Image.fromarray(255 * dilated_image).show()
-    print("TEst")
     return contours
 
 
@@ -281,10 +292,17 @@ def process_image(path, out_path):
 
     draw = ImageDraw.Draw(im)
     c_info = props_for_contours(contours, edges)
+    i = 0
     for c in c_info:
+        i += 1
         this_crop = c['x1'], c['y1'], c['x2'], c['y2']
         t = orig_im.crop((c['x1'], c['y1'], c['x2'], c['y2']))
         t.show()
+        tex = pytesseract.image_to_string(t)
+        if tex:
+            print("{}:".format(i))
+            print(pytesseract.image_to_string(t))
+        # t.show()
         draw.rectangle(this_crop, outline='blue')
     draw.rectangle(crop, outline='red')
     im.save(out_path)
