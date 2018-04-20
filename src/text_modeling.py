@@ -58,9 +58,7 @@ def main():
     from tmtoolkit.lda_utils.common import print_ldamodel_topic_words, print_ldamodel_doc_topics
 
     best_model = dict(results_by_n_topics)[140]['model']
-    print("Hallo")
     print_ldamodel_topic_words(best_model.topic_word_, vocab)
-    print("DuDa")
     print_ldamodel_doc_topics(best_model.doc_topic_, doc_labels)
 
 
