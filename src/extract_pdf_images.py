@@ -6,12 +6,8 @@ import re
 checkXO = r"/Type(?= */XObject)"       # finds "/Type/XObject"
 checkIM = r"/Subtype(?= */Image)"      # finds "/Subtype/Image"
 
-if len(sys.argv) != 2:
-    print('Usage: %s <input file>' % sys.argv[0])
-    exit(0)
-
 t0 = time.clock()
-doc = fitz.open(sys.argv[1])
+doc = fitz.open("../exampleDate/test.pdf")
 imgcount = 0
 lenXREF = doc._getXrefLength()         # number of objects - do not use entry 0!
 
