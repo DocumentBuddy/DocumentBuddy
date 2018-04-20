@@ -283,6 +283,8 @@ def process_image(path, out_path):
     c_info = props_for_contours(contours, edges)
     for c in c_info:
         this_crop = c['x1'], c['y1'], c['x2'], c['y2']
+        t = orig_im.crop((c['x1'], c['y1'], c['x2'], c['y2']))
+        t.show()
         draw.rectangle(this_crop, outline='blue')
     draw.rectangle(crop, outline='red')
     im.save(out_path)
@@ -304,7 +306,7 @@ if __name__ == '__main__':
     for path in files:
         out_path = path.replace('.jpg', '.crop.png')
         #out_path = path.replace('.png', '.crop.png')  # .png as input
-        if os.path.exists(out_path): continue
+        #if os.path.exists(out_path): continue
         try:
             process_image(path, out_path)
         except Exception as e:
