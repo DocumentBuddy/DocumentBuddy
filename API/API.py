@@ -39,8 +39,20 @@ def get_all_documents():
     return jsonify(json_objects)
 
 
+@app.route('/database/api/v1.0/keywords/', methods=['GET'])
+def get_all_keywords():
+    documents = sqlite.select_all('keywords')
+    if len(documents) == 0:
+        abort(404)
+    json_objects = []
+    for document in documents:
+        json_object = {'link': document[0], 'keyword': document[1]}
+        json_objects.append(json_object)
+    return jsonify(json_objects)
+
+
 @app.route('/database/api/v1.0/documents/keyword/exact/<string:keyword>', methods=['GET'])
-def get_documents_by_keyword_exact(keyword):
+def get_documents_by_keyword_exact(keyword: str) -> str:
     return get_documents_by_keyword(keyword, False)
 
 
@@ -59,10 +71,15 @@ def insert_documents():
                        'text': request.json['text'],
                        'doctype': request.json['doctype']}
     else:
-        sqlite.insert_data(request.json['link'], request.json['text'], request.json['keywords'], request.json['doctype'])
+        keywords = []
+        for index in range(0, len(request.json['keywords'])):
+            keywords.append(request.json['keywords'][index])
+        print(keywords)
+        print(request.json['link'])
+        sqlite.insert_data(request.json['link'], keywords, request.json['text'], request.json['doctype'])
         json_object = {'link': request.json['link'],
                        'text': request.json['text'],
-                       'keywords': request.json['keywords'],
+                       'keywords': keywords,
                        'doctype': request.json['doctype']}
     return jsonify(json_object), 201
 
@@ -77,5 +94,6 @@ def insert_keywords():
 
 
 if __name__ == '__main__':
+    global sqlite
     sqlite = Sqlite('./example.db')
     app.run()
