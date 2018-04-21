@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import fitz
+#import fitz
 import re
 import platform
 import os
@@ -30,6 +30,7 @@ def get_metadata(path):
     doc = PDFDocument(parser)
     return doc.info[0] if not len(doc.info) == 0 else {}
 
+"""
 def extract_images(path):
     checkXO = r"/Type(?= */XObject)"       # finds "/Type/XObject"
     checkIM = r"/Subtype(?= */Image)"      # finds "/Subtype/Image"
@@ -57,7 +58,7 @@ def extract_images(path):
             pix0 = None                    # free Pixmap resources
         pix = None                         # free Pixmap resources
 
-
+"""
 def get_creation_date(path_to_file):
     """
     Try to get the date that a file was created, falling back to when it was
@@ -74,7 +75,6 @@ def get_creation_date(path_to_file):
             # We're probably on Linux. No easy way to get creation dates here,
             # so we'll settle for when its content was last modified.
             return stat.st_mtime
-
 if __name__ == "__main__":
     # for sentence in get_summary(text):
     #    print(sentence)

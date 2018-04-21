@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort, request, g, render_template, send_file, send_from_directory
+from flask import Flask, jsonify, abort, request, g, render_template, send_file, send_from_directory,redirect
 import sqlite3
 import jinja2
 
@@ -41,8 +41,14 @@ def get_documents_by_name(name, is_like):
 
 @app.route('/')
 def hello_world():
+    print(g.pdfpath)
     return render_template('index.html',  pdfpath="test.pdf")
     # return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
+
+@app.route('/exampleData/<path:path>')
+def get_examplepdf(path):
+    print("hallo")
+    return send_file("../../exampleData/"+path)
 
 
 @app.route('/<path:path>')
@@ -50,10 +56,15 @@ def get_ressources(path):
     print("hallo")
     return send_file("../web/"+path)
 
-@app.route('/database/api/v1.0/pdf/<int:id>')
-def get_pdf(path):
-    print("hallo")
-    return render_template('index.html',  pdfpath="test.pdf")
+@app.route('/pdf/<int:id>', methods=['POST'])
+def get_pdf(id):
+    g.pdfpath = se_id(id)
+    return redirect('/')
+
+@app.route('/pdf/getid', methods=['POST'])
+def get_pdf(id):
+    g.pdfpath = se_id(id)
+    return jsonify({"path":g.pdfpath})
 
 
 # Get all documents
@@ -148,6 +159,13 @@ def get_all_names():
         json_objects.append(json_object)
     return jsonify(json_objects)
 
+def se_id(id: int) -> str:
+    data_container = get_db().select_from_id(id)
+    json_objects=[]
+    for data in data_container:
+        print(data)
+        return data[1]
+
 
 # GET data from exact author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
@@ -179,6 +197,7 @@ def select_id(id: int)-> str:
     data_container = get_db().select_from_id(id)
     json_objects=[]
     for data in data_container:
+        print(data)
         json_object = {'id': data[0], 'link': data[1], 'text': data[2], 'doctype': data[3], 'toc':
             data[4], 'author':  data[5], 'pages':  data[6], 'date':  data[7]}
         json_objects.append(json_object)
