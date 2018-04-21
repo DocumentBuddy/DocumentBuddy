@@ -109,3 +109,7 @@ venv.bak/
 .idea
 DocumentBuddy.iml
 *.crop.png
+
+# settings files
+settings.yaml
+/src/web/settings.js
