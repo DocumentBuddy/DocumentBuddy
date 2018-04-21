@@ -32,7 +32,6 @@ class Sqlite:
         for keyword in keywords:
             self.c.execute('INSERT INTO keywords (id, keyword) VALUES ("{}" , "{}")'.format(id[0],keyword))
         for name_entity in name_entities:
-            print(name_entity)
             self.c.execute('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name_entity))
 
     def insert_data_in_main(self, link, text, doctype, toc, author, name_entities, pages, date):
@@ -85,7 +84,6 @@ class Sqlite:
         for keyword in keywords:
             self.c.execute("SELECT DISTINCT id FROM keywords WHERE keyword LIKE ?", ('%' + keyword + '%',))
             data.append(self.c.fetchall())
-            print(data)
             data = list(itertools.chain.from_iterable(data))
             data = [list(i) if isinstance(i, tuple) else [i] for i in data]
             newdata = []
