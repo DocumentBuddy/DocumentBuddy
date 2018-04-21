@@ -3,17 +3,18 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
-from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer as Summarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
 
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfdocument import PDFDocument
 
 LANGUAGE = "german"
 SENTENCES_COUNT = 5
-text = """
+tex = """
 Unternehmensfinanzierung im Umbruch
 
 Die Finanzierungsperspektiven deutscher Unternehmen im Zeichen
@@ -115,18 +116,28 @@ Um die unabdingbare Aktualität zu sichern und auch Fortschritte feststellen zu 
 nen, beabsichtigen die beteiligten Verbände und die KfW diese Studie in jährlichem
 Rhythmus zu wiederholen.
 """
+filepath = "../exampleData/Unternehmensbefragung/Unternehmensbefragung-2017-–-Kreditzugang-bestenfalls-stabil.pdf"
 
 
-if __name__ == "__main__":
-    url = "https://de.wikipedia.org/wiki/Diotima"
-    #parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
+def get_metadata(path):
+    fp = open(path, 'rb')
+    parser = PDFParser(fp)
+    doc = PDFDocument(parser)
+
+    return doc.info[0]
+
+
+def get_summary(text):
     text = text.replace("-\n", "")
-    parser = PlaintextParser.from_string(string=text,tokenizer=Tokenizer(LANGUAGE))
+    parser = PlaintextParser.from_string(string=text, tokenizer=Tokenizer(LANGUAGE))
     stemmer = Stemmer(LANGUAGE)
 
     summarizer = Summarizer(stemmer)
     summarizer.stop_words = get_stop_words(LANGUAGE)
-    test = summarizer(parser.document, SENTENCES_COUNT)
-    for sentence in summarizer(parser.document, SENTENCES_COUNT):
-        sentence
-        print(sentence)
+    return list(summarizer(parser.document, SENTENCES_COUNT))
+
+
+if __name__ == "__main__":
+    # for sentence in get_summary(text):
+    #    print(sentence)
+    print(get_metadata(filepath))
