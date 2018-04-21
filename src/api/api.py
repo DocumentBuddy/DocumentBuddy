@@ -1,10 +1,16 @@
-from flask import Flask, jsonify, abort, request, g
+from flask import Flask, jsonify, abort, request, g, render_template, send_file, send_from_directory
 import sqlite3
+import jinja2
 
 from api.sqlite import Sqlite
 
 
 app = Flask(__name__)
+my_loader = jinja2.ChoiceLoader([
+    app.jinja_loader,
+    jinja2.FileSystemLoader('web/'),
+])
+app.jinja_loader = my_loader
 
 
 def get_documents_by_keyword(keyword, is_like):
@@ -33,8 +39,18 @@ def get_documents_by_name(name, is_like):
 
 @app.route('/')
 def hello_world():
-    return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
+    return render_template('index.html',  pdfpath="test.pdf")
+    #return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
 
+@app.route('/<path:path>')
+def get_ressources(path):
+    print("hallo")
+    return send_file("../web/"+path)
+
+@app.route('/database/api/v1.0/pdf/<int:id>')
+def get_pdf(path):
+    print("hallo")
+    return render_template('index.html',  pdfpath="test.pdf")
 
 @app.route('/database/api/v1.0/documents/', methods=['GET'])
 def get_all_documents():
@@ -145,7 +161,6 @@ def insert_keywords():
         json_object = {'id': request.json['id'], 'keywords': request.json['keywords']}
         return jsonify(json_object), 201
 
-# ******************************************
 @app.route('/database/api/v1.0/names/', methods=['GET'])
 def get_all_names():
     documents = get_db().select_all('names')
@@ -155,6 +170,17 @@ def get_all_names():
         json_objects.append(json_object)
     return jsonify(json_objects)
 
+
+@app.route('/database/api/v1.0/documents/id/<int:id>', methods=['GET'])
+def select_id(id: int) -> int:
+    data_container = get_db().select_from_id(id)
+    json_objects=[]
+    for data in data_container:
+        print(data)
+        json_object = {'id': data[0], 'link': data[1], 'text': data[2], 'doctype': data[3], 'toc':
+            data[4], 'author':  data[5], 'pages':  data[6], 'date':  data[7]}
+        json_objects.append(json_object)
+    return jsonify(json_objects), 201
 
 @app.route('/database/api/v1.0/names/many/', methods=['POST'])
 def select_names():
@@ -169,7 +195,6 @@ def select_names():
         json_objects.append(json_object)
     return jsonify(json_objects), 201
 
-# ******************************************
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
