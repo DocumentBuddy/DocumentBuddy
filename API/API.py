@@ -7,9 +7,9 @@ app = Flask(__name__)
 
 def get_documents_by_keyword(keyword, is_like):
     if is_like:
-        documents = sqlite.selectAllIncludingKeyword(keyword)
+        documents = sqlite.select_all_including_keyword(keyword)
     else:
-        documents = sqlite.selectAllPreciseByKeyword(keyword)
+        documents = sqlite.select_all_precise_by_keyword(keyword)
     if len(documents) == 0:
         abort(404)
     json_objects = []
@@ -39,12 +39,12 @@ def insert_documents():
     if not request.json or 'link' not in request.json or 'text' not in request.json or 'doctype' not in request.json:
         abort(400)
     if 'keywords' not in request.json:
-        sqlite.insertDataInMain(request.json['link'], request.json['text'], request.json['doctype'])
+        sqlite.insert_data_in_main(request.json['link'], request.json['text'], request.json['doctype'])
         json_object = {'link': request.json['link'],
                        'text': request.json['text'],
                        'doctype': request.json['doctype']}
     else:
-        sqlite.insertData(request.json['link'], request.json['text'], request.json['keywords'], request.json['doctype'])
+        sqlite.insert_data(request.json['link'], request.json['text'], request.json['keywords'], request.json['doctype'])
         json_object = {'link': request.json['link'],
                        'text': request.json['text'],
                        'keywords': request.json['keywords'],
@@ -56,7 +56,7 @@ def insert_documents():
 def insert_documents():
     if not request.json or 'link' not in request.json or 'keywords' not in request.json:
         abort(400)
-    sqlite.insertDataInKeywords(request.json['link'], request.json['keywords'])
+    sqlite.insert_data_in_keywords(request.json['link'], request.json['keywords'])
     json_object = {'link': request.json['link'], 'keywords': request.json['keywords']}
     return jsonify(json_object), 201
 
