@@ -109,3 +109,6 @@ venv.bak/
 .idea
 DocumentBuddy.iml
 *.crop.png
+
+# settings files
+settings.yaml
