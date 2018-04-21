@@ -53,7 +53,7 @@ def insert_documents():
 
 
 @app.route('/database/api/v1.0/keywords/insert/', methods=['POST'])
-def insert_documents():
+def insert_keywords():
     if not request.json or 'link' not in request.json or 'keywords' not in request.json:
         abort(400)
     sqlite.insert_data_in_keywords(request.json['link'], request.json['keywords'])
