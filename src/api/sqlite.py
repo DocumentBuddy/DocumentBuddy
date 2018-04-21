@@ -100,6 +100,13 @@ class Sqlite:
         self.c.execute("SELECT * FROM {}".format(database_name))
         return self.c.fetchall()
 
+    def select_from_id(self, id):
+        self.c.execute("SELECT * FROM main WHERE id=?",(id,))
+        return self.c.fetchall()
+
+    def select_link_from_id(self, id):
+        self.c.execute("SELECT link FROM main WHERE id=?", (id,))
+        return self.c.fetchone()[0]
     # Select doctype
 
     # update
