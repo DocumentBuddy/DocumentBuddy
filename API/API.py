@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, abort
+from flask import Flask, jsonify, abort, request
+
 from sqlite import Sqlite
 
 app = Flask(__name__)
@@ -24,13 +25,40 @@ def hello_world():
 
 
 @app.route('/database/api/v1.0/documents/keyword/exact/<string:keyword>', methods=['GET'])
-def get_documents(keyword):
+def get_documents_by_keyword_exact(keyword):
     return get_documents_by_keyword(keyword, False)
 
 
 @app.route('/database/api/v1.0/documents/keyword/like/<string:keyword>', methods=['GET'])
-def get_documents(keyword):
+def get_documents_by_keyword_like(keyword):
     return get_documents_by_keyword(keyword, True)
+
+
+@app.route('/database/api/v1.0/documents/insert/', methods=['POST'])
+def insert_documents():
+    if not request.json or 'link' not in request.json or 'text' not in request.json or 'doctype' not in request.json:
+        abort(400)
+    if 'keywords' not in request.json:
+        sqlite.insertDataInMain(request.json['link'], request.json['text'], request.json['doctype'])
+        json_object = {'link': request.json['link'],
+                       'text': request.json['text'],
+                       'doctype': request.json['doctype']}
+    else:
+        sqlite.insertData(request.json['link'], request.json['text'], request.json['keywords'], request.json['doctype'])
+        json_object = {'link': request.json['link'],
+                       'text': request.json['text'],
+                       'keywords': request.json['keywords'],
+                       'doctype': request.json['doctype']}
+    return jsonify(json_object), 201
+
+
+@app.route('/database/api/v1.0/keywords/insert/', methods=['POST'])
+def insert_documents():
+    if not request.json or 'link' not in request.json or 'keywords' not in request.json:
+        abort(400)
+    sqlite.insertDataInKeywords(request.json['link'], request.json['keywords'])
+    json_object = {'link': request.json['link'], 'keywords': request.json['keywords']}
+    return jsonify(json_object), 201
 
 
 if __name__ == '__main__':
