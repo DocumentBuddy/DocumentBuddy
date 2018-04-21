@@ -1,10 +1,16 @@
-from flask import Flask, jsonify, abort, request, g
+from flask import Flask, jsonify, abort, request, g, render_template, send_file, send_from_directory
 import sqlite3
+import jinja2
 
 from api.sqlite import Sqlite
 
 
 app = Flask(__name__)
+my_loader = jinja2.ChoiceLoader([
+    app.jinja_loader,
+    jinja2.FileSystemLoader('web/'),
+])
+app.jinja_loader = my_loader
 
 
 def get_documents_by_keyword(keyword, is_like):
@@ -33,8 +39,13 @@ def get_documents_by_name(name, is_like):
 
 @app.route('/')
 def hello_world():
-    return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
+    return render_template('index.html',  pdfpath="test.pdf")
+    #return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
 
+@app.route('/<path:path>')
+def get_ressources(path):
+    print("hallo")
+    return send_file("../web/"+path)
 
 @app.route('/database/api/v1.0/documents/', methods=['GET'])
 def get_all_documents():
