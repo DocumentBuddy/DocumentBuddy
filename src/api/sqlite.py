@@ -5,12 +5,6 @@ import itertools
 
 
 class Sqlite:
-    def dict_factory(self, row):
-        d = {}
-        for idx, col in enumerate(self.c.description):
-            d[col[0]] = row[idx]
-        return d
-
     def __init__(self, database_path=None):
         if database_path is None:
             database_path = os.path.join(
@@ -31,16 +25,21 @@ class Sqlite:
     # insertDataInMain - just inserts the Data in main
     # insertDataInKeyword - just insert the Data in keywords
     def insert_data(self, link, keywords, text, doctype, toc, author, name_entities, pages, date):
-        self.c.execute("INSERT INTO main (link, text, doctype, toc, author,name_entities, pages, date) VALUES "
-                       "(?,?,?,?,?,?,?,?)",(link, text, doctype, toc, author, name_entities, pages, date))
+        self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES "
+                       "(?,?,?,?,?,?,?)",(link, text, doctype, toc, author, pages, date))
         self.c.execute("SELECT max(id) FROM main")
         id=self.c.fetchone()
         for keyword in keywords:
             self.c.execute('INSERT INTO keywords (id, keyword) VALUES ("{}" , "{}")'.format(id[0],keyword))
+        for name_entity in name_entities:
+            print(name_entity)
+            self.c.execute('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name_entity))
 
     def insert_data_in_main(self, link, text, doctype, toc, author, name_entities, pages, date):
-        self.c.execute("INSERT INTO main (link, text, doctype, toc, author, name_entities, pages, date) VALUES "
-                       "(?,?,?,?,?,?,?,?)", (link, text, doctype, toc, author, name_entities, pages, date))
+        self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES "
+                       "(?,?,?,?,?,?,?)", (link, text, doctype, toc, author, pages, date))
+        for name_entity in name_entities:
+            self.c.execute('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name_entity))
 
     def insert_data_in_keywords(self, id, keywords):
         for keyword in keywords:
@@ -54,6 +53,7 @@ class Sqlite:
     #   of main
     # selectLinkIncludingKeyword - same as before, but returns a link
     # selectAll(database) - SELECT * FROM database
+
     def select_all_precise_by_keyword(self, keyword):
         self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM keywords WHERE keyword="{}")'.format(keyword))
         return self.c.fetchall()
@@ -71,13 +71,16 @@ class Sqlite:
         self.c.execute("SELECT DISTINCT id FROM keywords WHERE keyword LIKE ?", ('%' + keyword + '%',))
         return self.c.fetchall()
 
-    def select_all(self, database_name):
-        self.c.execute("SELECT * FROM {}".format(database_name))
+    def select_all_including_name(self, name):
+        self.c.execute("SELECT * FROM main WHERE id IN (SELECT DISTINCT id FROM names WHERE name LIKE ?)", ('%' + name + '%',))
+        return self.c.fetchall()
+
+    def select_all_precise_by_name(self, name):
+        self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM names WHERE name="{}")'.format(name))
         return self.c.fetchall()
 
     # Select more keywords
     def select_from_keywords(self, keywords):
-        self.conn.row_factory = self.dict_factory
         data =[]
         for keyword in keywords:
             self.c.execute("SELECT DISTINCT id FROM keywords WHERE keyword LIKE ?", ('%' + keyword + '%',))
@@ -94,6 +97,10 @@ class Sqlite:
             self.c.execute("SELECT * FROM main WHERE ID = ?", (item,))
             return_data.append(self.c.fetchone())
         return return_data
+
+    def select_all(self, database_name):
+        self.c.execute("SELECT * FROM {}".format(database_name))
+        return self.c.fetchall()
 
     # Select doctype
 
@@ -119,6 +126,10 @@ class Sqlite:
     def create_table_keywords(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS keywords (id INTEGER, keyword text, "
                        "FOREIGN KEY(id) REFERENCES main(ID), PRIMARY  KEY (id, keyword))")
+
+    def create_table_names(self):
+        self.c.execute("CREATE TABLE IF NOT EXISTS names (id INTEGER, name text, "
+                       "FOREIGN KEY(id) REFERENCES main(ID), PRIMARY  KEY (id, name))")
 
     # Drop Tables
     def drop_table(self, database_name):
