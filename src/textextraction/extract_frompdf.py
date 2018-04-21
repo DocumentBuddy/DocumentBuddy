@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-# import fitz
-# import time
-# import re
+import fitz
+import re
 import platform
 import os
 from tika import parser
@@ -31,12 +30,10 @@ def get_metadata(path):
     doc = PDFDocument(parser)
     return doc.info[0] if not len(doc.info) == 0 else {}
 
-"""
 def extract_images(path):
     checkXO = r"/Type(?= */XObject)"       # finds "/Type/XObject"
     checkIM = r"/Subtype(?= */Image)"      # finds "/Subtype/Image"
 
-    t0 = time.clock()
     doc = fitz.open(path)
     imgcount = 0
     lenXREF = doc._getXrefLength()         # number of objects - do not use entry 0!
@@ -59,11 +56,6 @@ def extract_images(path):
             pix0.writePNG("img-%s.png" % (i,))
             pix0 = None                    # free Pixmap resources
         pix = None                         # free Pixmap resources
-
-    t1 = time.clock()
-    print("run time", round(t1-t0, 2))
-    print("extracted images", imgcount)
-"""
 
 
 def get_creation_date(path_to_file):
