@@ -2,7 +2,7 @@ from flask import Flask, jsonify, abort, request
 
 try:
     from sqlite import Sqlite
-except ModuleNotFoundError:
+except BaseException:
     from .sqlite import Sqlite
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ def get_documents_by_keyword(keyword, is_like):
         abort(404)
     json_objects = []
     for document in documents:
-        json_object = {'link': document[0], 'text': document[1], 'doctype': document[2]}
+        json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3]}
         json_objects.append(json_object)
     return jsonify(json_objects)
 
@@ -34,21 +34,15 @@ def get_all_documents():
         abort(404)
     json_objects = []
     for document in documents:
-        json_object = {'link': document[0], 'text': document[1], 'doctype': document[2]}
+        json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3]}
         json_objects.append(json_object)
     return jsonify(json_objects)
 
 
-@app.route('/database/api/v1.0/keywords/', methods=['GET'])
-def get_all_keywords():
-    documents = sqlite.select_all('keywords')
-    if len(documents) == 0:
-        abort(404)
-    json_objects = []
-    for document in documents:
-        json_object = {'link': document[0], 'keyword': document[1]}
-        json_objects.append(json_object)
-    return jsonify(json_objects)
+@app.route('/database/api/v1.0/documents/delete/all', methods=['GET'])
+def delete_all_documents():
+    sqlite.truncate_database('main')
+    return 204
 
 
 @app.route('/database/api/v1.0/documents/keyword/exact/<string:keyword>', methods=['GET'])
@@ -82,6 +76,18 @@ def insert_documents():
                        'keywords': keywords,
                        'doctype': request.json['doctype']}
     return jsonify(json_object), 201
+
+
+@app.route('/database/api/v1.0/keywords/', methods=['GET'])
+def get_all_keywords():
+    documents = sqlite.select_all('keywords')
+    if len(documents) == 0:
+        abort(404)
+    json_objects = []
+    for document in documents:
+        json_object = {'link': document[0], 'keyword': document[1]}
+        json_objects.append(json_object)
+    return jsonify(json_objects)
 
 
 @app.route('/database/api/v1.0/keywords/insert/', methods=['POST'])
