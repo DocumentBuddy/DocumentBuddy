@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+    <style type="text/css">
+        html, body, .section, .container {
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            flex-flow: column;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section {
+            padding: 0;
+        }
+
+        .branding {
+            opacity: 0.85;
+        }
+        .branding span {
+            padding: 7px;
+
+            display: flex;
+            flex-flow: row;
+
+            align-items: center;
+        }
+        .branding img {
+            width: 50px;
+            height: 50px;
+
+            margin-right: 7px;
+
+            filter: invert(1) grayscale(1) brightness(2.5);
+        }
+        .branding h1 {
+            font-size: 135%;
+            color: #ffffff;
+        }
+
+        .chat-frame {
+            width: 600px;
+            height: 350px;
+
+            margin: 25px;
+        }
+
+
+        body {
+            background: no-repeat center center fixed url('./backdrop.jpg');
+            background-size: cover;
+        }
+
+        .section {
+            background: linear-gradient(to top right, rgba(9,168,31,0.4), rgba(54,15,129,1));
+        }
+
+        .chat-frame {
+            background: rgba(245,245,245,0.85);
+        }
+
+        .wc-console {
+            background: #00ff00;
+        }
+    </style>
+  </head>
+    <body>
+        <section class="section">
+            <div class="container">
+                <div class="branding">
+                    <span>
+                        <img src="logo.png"/>
+                        <h1>DocumentBuddy</h1>
+                    </span>
+                </div>
+                <iframe src='https://webchat.botframework.com/embed/DocumentBuddy?s=ArQBMmW43R4.cwA.4JY.o3v05EaqBTa-_lXTYMMebMyZvf1ravahsl-B5ymzzdg' class="chat-frame"></iframe>
+            </div>
+        </section>
+    </body>
+</html>
