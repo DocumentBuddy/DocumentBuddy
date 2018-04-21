@@ -45,7 +45,7 @@ URL/database/api/v1.0/keywords/
 GET Request
 
 ```
-URL/database/api/v1.0/documents/keyword/exact/<string:keyword>
+URL/database/api/v1.0/keyword/exact/<string:keyword>
 ```
 
 ### Get Documents by like Keyword
@@ -53,7 +53,7 @@ URL/database/api/v1.0/documents/keyword/exact/<string:keyword>
 GET Request
 
 ```
-URL/database/api/v1.0/documents/keyword/like/<string:keyword>
+URL/database/api/v1.0/keyword/like/<string:keyword>
 ```
 
 ### Get Documents by  more than one Keyword
@@ -88,6 +88,14 @@ GET Request
 
 ```
 URL/database/api/v1.0/doctype/like/<string:doctype>
+```
+
+### Get Documents by like name
+
+GET Request
+
+```
+URL/database/api/v1.0/name/exact/<string:name>
 ```
 
 ## Insert Data

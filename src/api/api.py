@@ -72,22 +72,22 @@ def delete_all_documents():
     return 204
 
 
-@app.route('/database/api/v1.0/documents/keyword/exact/<string:keyword>', methods=['GET'])
+@app.route('/database/api/v1.0/keyword/exact/<string:keyword>', methods=['GET'])
 def get_documents_by_keyword_exact(keyword: str) -> str:
     return get_documents_by_keyword(keyword, False)
 
 
-@app.route('/database/api/v1.0/documents/keyword/like/<string:keyword>', methods=['GET'])
+@app.route('/database/api/v1.0/keyword/like/<string:keyword>', methods=['GET'])
 def get_documents_by_keyword_like(keyword):
     return get_documents_by_keyword(keyword, True)
 
 
-@app.route('/database/api/v1.0/documents/name/exact/<string:name>', methods=['GET'])
+@app.route('/database/api/v1.0/name/exact/<string:name>', methods=['GET'])
 def get_documents_by_name_exact(name: str) -> str:
     return get_documents_by_name(name, False)
 
 
-@app.route('/database/api/v1.0/documents/name/like/<string:name>', methods=['GET'])
+@app.route('/database/api/v1.0/name/like/<string:name>', methods=['GET'])
 def get_documents_by_name_like(name: str) -> str:
     return get_documents_by_name(name, True)
 
@@ -159,7 +159,7 @@ def get_data_from_doctype(doctype: str)->str:
         json_objects.append(json_object)
     return jsonify(json_objects), 201
 
-@app.route('/database/api/v1.0/documents/id/<int:id>', methods=['GET'])
+@app.route('/database/api/v1.0/id/<int:id>', methods=['GET'])
 def select_id(id: int) -> int:
     data_container = get_db().select_from_id(id)
     json_objects=[]
