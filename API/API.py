@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, abort, request
 
-from sqlite import Sqlite
+try:
+    from sqlite import Sqlite
+except ModuleNotFoundError:
+    from .sqlite import Sqlite
 
 app = Flask(__name__)
 
