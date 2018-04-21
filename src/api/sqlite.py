@@ -25,24 +25,24 @@ class Sqlite:
     # insertDataInMain - just inserts the Data in main
     # insertDataInKeyword - just insert the Data in keywords
     def insert_data(self, link, keywords, text, doctype, toc, author, name_entities, pages, date):
-        self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES "
+        self.c.executemany("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES "
                        "(?,?,?,?,?,?,?)",(link, text, doctype, toc, author, pages, date))
         self.c.execute("SELECT max(id) FROM main")
         id=self.c.fetchone()
         for keyword in keywords:
-            self.c.execute('INSERT INTO keywords (id, keyword) VALUES ("{}" , "{}")'.format(id[0],keyword))
+            self.c.executemany('INSERT INTO keywords (id, keyword) VALUES ("{}" , "{}")'.format(id[0],keyword))
         for name_entity in name_entities:
-            self.c.execute('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name_entity))
+            self.c.executemany('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name_entity))
 
     def insert_data_in_main(self, link, text, doctype, toc, author, name_entities, pages, date):
-        self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES "
+        self.c.executemany("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES "
                        "(?,?,?,?,?,?,?)", (link, text, doctype, toc, author, pages, date))
         for name_entity in name_entities:
-            self.c.execute('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name_entity))
+            self.c.executemany('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name_entity))
 
     def insert_data_in_keywords(self, id, keywords):
         for keyword in keywords:
-            self.c.execute('INSERT INTO keywords (id,keyword) VALUES ("{}","{}")'.format(id, keyword))
+            self.c.executemany('INSERT INTO keywords (id,keyword) VALUES ("{}","{}")'.format(id, keyword))
 
     # Select
     # selectAllPreciseKeyword - enter an Keyword, check if the keyword is exactly in the tuple of keywords and returns
