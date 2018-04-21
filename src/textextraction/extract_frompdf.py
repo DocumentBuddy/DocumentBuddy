@@ -1,12 +1,13 @@
-import fitz
-import time
-import re
+# import fitz
+# import time
+# import re
 from tika import parser
 
 # path "../exampleDate/test.pdf"
 def extract_text(path):
     return parser.from_file(path)['content']
 
+"""
 def extract_images(path):
     checkXO = r"/Type(?= */XObject)"       # finds "/Type/XObject"
     checkIM = r"/Subtype(?= */Image)"      # finds "/Subtype/Image"
@@ -38,3 +39,4 @@ def extract_images(path):
     t1 = time.clock()
     print("run time", round(t1-t0, 2))
     print("extracted images", imgcount)
+"""
