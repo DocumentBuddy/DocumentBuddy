@@ -1,15 +1,16 @@
-from sqlite import Sqlite
 import pprint
 
-sqlite = Sqlite('./example.db')
+from api.sqlite import Sqlite
+
+sqlite = Sqlite('./api/example.db')
 sqlite.drop_table('main')
 sqlite.drop_table('keywords')
 sqlite.create_table_main()
 sqlite.create_table_keywords()
-sqlite.insert_data('link',('keyword1', 'keyword2'),'text','kfw_sth', 'toc', 'AuthorA', 4, '2018-10-12')
-sqlite.insert_data('/pathToSomeWhere',('Flo','Badjosh'), 'Hallo Hallo', 'chat', 'toc', 'AuthorA', 4, '2018-10-12')
-sqlite.insert_data('/pathToSomeWhereElse',('Flo2','Badjosh2'), 'Hallo2 Hallo2', 'chat2', 'toc', 'AuthorA', 4, '2018-10-12')
-sqlite.insert_data('/pathToSomeWhereElse',('link', 'text'),'textblablabla', 'some categry', 'toc', 'AuthorA', 4, '2018-10-12')
+sqlite.insert_data('link',('keyword1', 'keyword2'),'text','kfw_sth', 'toc', 'AuthorA','NameA NameB', 4, '2018-10-12')
+sqlite.insert_data('/pathToSomeWhere',('Flo','Badjosh'), 'Hallo Hallo', 'chat', 'toc', 'AuthorA','', 4, '2018-10-12')
+sqlite.insert_data('/pathToSomeWhereElse',('Flo2','Badjosh2'), 'Hallo2 Hallo2', 'chat2', 'toc', 'AuthorA', 'NameC', 4, '2018-10-12')
+sqlite.insert_data('/pathToSomeWhereElse',('link', 'text'),'textblablabla', 'some categry', 'toc', 'AuthorA', 'Paul', 4, '2018-10-12')
 
 
 # Data as array

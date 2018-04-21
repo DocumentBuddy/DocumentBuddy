@@ -15,7 +15,8 @@ def get_documents_by_keyword(keyword, is_like):
         abort(404)
     json_objects = []
     for document in documents:
-        json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3]}
+        json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3], 'toc':
+            document[4], 'author': document[5], 'name_entities': document[6], 'pages': document[7], 'date': document[8]}
         json_objects.append(json_object)
     return jsonify(json_objects)
 
@@ -32,7 +33,8 @@ def get_all_documents():
         abort(404)
     json_objects = []
     for document in documents:
-        json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3]}
+        json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3], 'toc':
+            document[4], 'author': document[5], 'name_entities': document[6], 'pages': document[7], 'date': document[8]}
         json_objects.append(json_object)
     return jsonify(json_objects)
 
