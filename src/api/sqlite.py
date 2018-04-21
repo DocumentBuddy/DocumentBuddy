@@ -107,7 +107,16 @@ class Sqlite:
     def select_link_from_id(self, id):
         self.c.execute("SELECT link FROM main WHERE id=?", (id,))
         return self.c.fetchone()[0]
-    # Select doctype
+
+    # select author
+    def select_like_from_author(self, author):
+        self.c.execute("SELECT * FROM main WHERE author LIKE ?", ('%' + author + '%',))
+        return self.c.fetchall()
+
+    # select doctype
+    def select_like_from_doctype(self, doctype):
+        self.c.execute("SELECT * FROM main WHERE doctype LIKE ?", ('%' + doctype + '%',))
+        return self.c.fetchall()
 
     # update
     # updateMain(link, ("updateRow1", "updateRow2"), ("updateValue1","updateValue2"))

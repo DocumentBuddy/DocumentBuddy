@@ -74,6 +74,22 @@ URL/database/api/v1.0/keywords/many/
 }
 ```
 
+### Get Documents by like Author
+
+GET Request
+
+```
+URL/database/api/v1.0/author/like/<string:author>
+```
+
+### Get Documents by like Doctype
+
+GET Request
+
+```
+URL/database/api/v1.0/doctype/like/<string:doctype>
+```
+
 ## Insert Data
 
 ### Insert Documents without Keywords
