@@ -30,15 +30,15 @@ class Sqlite:
     #   keywords (each keyword is inserted seperatly)
     # insertDataInMain - just inserts the Data in main
     # insertDataInKeyword - just insert the Data in keywords
-    def insert_data(self, link, keywords, text, doctype):
-        self.c.execute("INSERT INTO main (link, text, doctype) VALUES (?,?,?)", (link, text, doctype))
+    def insert_data(self, link, keywords, text, doctype, toc, author, pages, date):
+        self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES (?,?,?,?,?,?,?)", (link, text, doctype, toc, author, pages, date))
         self.c.execute("SELECT max(id) FROM main")
         id=self.c.fetchone()
         for keyword in keywords:
             self.c.execute('INSERT INTO keywords (id, keyword) VALUES ("{}" , "{}")'.format(id[0],keyword))
 
-    def insert_data_in_main(self, link, text, doctype):
-        self.c.execute("INSERT INTO main (link, text, doctype) VALUES (?,?,?)", (link, text, doctype))
+    def insert_data_in_main(self, link, text, doctype, toc, author, pages, date):
+        self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES (?,?,?,?,?,?,?)", (link, text, doctype, toc, author, pages, date))
 
     def insert_data_in_keywords(self, id, keywords):
         for keyword in keywords:
@@ -53,8 +53,7 @@ class Sqlite:
     # selectLinkIncludingKeyword - same as before, but returns a link
     # selectAll(database) - SELECT * FROM database
     def select_all_precise_by_keyword(self, keyword):
-        print('SELECT * FROM main WHERE id = (SELECT id FROM keywords WHERE keyword="{}")'.format(keyword))
-        self.c.execute('SELECT * FROM main WHERE id = (SELECT id FROM keywords WHERE keyword="{}")'.format(keyword))
+        self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM keywords WHERE keyword="{}")'.format(keyword))
         return self.c.fetchall()
 
     def select_link_precise_by_keyword(self, keyword):
@@ -62,7 +61,7 @@ class Sqlite:
         return self.c.fetchall()
 
     def select_all_including_keyword(self, keyword):
-        self.c.execute("SELECT * FROM main WHERE id = (SELECT id FROM keywords WHERE keyword LIKE ?)",
+        self.c.execute("SELECT * FROM main WHERE id IN (SELECT id FROM keywords WHERE keyword LIKE ?)",
                        ('%' + keyword + '%',))
         return self.c.fetchall()
 
@@ -105,7 +104,8 @@ class Sqlite:
         return self.c.fetchall()
 
     def create_table_main(self):
-        self.c.execute("CREATE TABLE IF NOT EXISTS main (ID INTEGER PRIMARY KEY AUTOINCREMENT, link text, text text, doctype text)")
+        self.c.execute("CREATE TABLE IF NOT EXISTS main (ID INTEGER PRIMARY KEY AUTOINCREMENT, link text, text text,"
+                       " doctype text, toc text, author text, pages INTEGER, date text)")
 
     def create_table_keywords(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS keywords (id INTEGER, keyword text, FOREIGN KEY(id) REFERENCES main(ID))")
