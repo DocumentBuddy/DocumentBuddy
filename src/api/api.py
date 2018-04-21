@@ -12,12 +12,22 @@ def get_documents_by_keyword(keyword, is_like):
         documents = get_db().select_all_including_keyword(keyword)
     else:
         documents = get_db().select_all_precise_by_keyword(keyword)
-    if len(documents) == 0:
-        abort(404)
     json_objects = []
     for document in documents:
         json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3], 'toc':
-            document[4], 'author': document[5], 'name_entities': document[6], 'pages': document[7], 'date': document[8]}
+            document[4], 'author': document[5], 'pages': document[6], 'date': document[7]}
+        json_objects.append(json_object)
+    return jsonify(json_objects)
+
+def get_documents_by_name(name, is_like):
+    if is_like:
+        documents = get_db().select_all_including_name(name)
+    else:
+        documents = get_db().select_all_precise_by_name(name)
+    json_objects = []
+    for document in documents:
+        json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3], 'toc':
+            document[4], 'author': document[5], 'pages': document[6], 'date': document[7]}
         json_objects.append(json_object)
     return jsonify(json_objects)
 
@@ -29,8 +39,6 @@ def hello_world():
 @app.route('/database/api/v1.0/documents/', methods=['GET'])
 def get_all_documents():
     documents = get_db().select_all('main')
-    if len(documents) == 0:
-        abort(404)
     json_objects = []
     for document in documents:
         json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3], 'toc':
@@ -54,9 +62,13 @@ def get_documents_by_keyword_exact(keyword: str) -> str:
 def get_documents_by_keyword_like(keyword):
     return get_documents_by_keyword(keyword, True)
 
+@app.route('/database/api/v1.0/documents/name/exact/<string:name>', methods=['GET'])
+def get_documents_by_name_exact(name: str) -> str:
+    return get_documents_by_name(name, False)
 
-@app.route('/database/api/v1.0/documents/keyword/like/<string:keyword>', methods=['GET'])
-
+@app.route('/database/api/v1.0/documents/name/like/<string:name>', methods=['GET'])
+def get_documents_by_name_like(name: str) -> str:
+    return get_documents_by_name(name, True)
 
 
 @app.route('/database/api/v1.0/documents/insert/', methods=['POST'])
@@ -101,8 +113,6 @@ def insert_documents():
 @app.route('/database/api/v1.0/keywords/', methods=['GET'])
 def get_all_keywords():
     documents = get_db().select_all('keywords')
-    if len(documents) == 0:
-        abort(404)
     json_objects = []
     for document in documents:
         json_object = {'id': document[0], 'keyword': document[1]}
@@ -135,6 +145,31 @@ def insert_keywords():
         json_object = {'id': request.json['id'], 'keywords': request.json['keywords']}
         return jsonify(json_object), 201
 
+# ******************************************
+@app.route('/database/api/v1.0/names/', methods=['GET'])
+def get_all_names():
+    documents = get_db().select_all('names')
+    json_objects = []
+    for document in documents:
+        json_object = {'id': document[0], 'name': document[1]}
+        json_objects.append(json_object)
+    return jsonify(json_objects)
+
+
+@app.route('/database/api/v1.0/names/many/', methods=['POST'])
+def select_names():
+    if not request.json or 'name' not in request.json:
+        abort(400)
+    data_container = get_db().select_from_names(request.json['name'])
+    json_objects=[]
+    for data in data_container:
+        print(data)
+        json_object = {'id': data[0], 'link': data[1], 'text': data[2], 'doctype': data[3], 'toc':
+            data[4], 'author':  data[5], 'pages':  data[6], 'date':  data[7]}
+        json_objects.append(json_object)
+    return jsonify(json_objects), 201
+
+# ******************************************
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
