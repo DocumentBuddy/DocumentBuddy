@@ -112,3 +112,4 @@ DocumentBuddy.iml
 
 # settings files
 settings.yaml
+/src/web/settings.js
