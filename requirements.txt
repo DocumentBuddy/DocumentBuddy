@@ -3,7 +3,6 @@ wordcloud==1.4.1
 six
 numpy
 scipy
-nltk
 pandas
 pyphen
 lda
