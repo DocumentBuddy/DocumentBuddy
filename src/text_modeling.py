@@ -1,9 +1,13 @@
+
+import warnings
+warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
+
 from tmtoolkit.preprocess import TMPreproc
 from tmtoolkit.corpus import Corpus
 from tmtoolkit import lda_utils
 import pandas as pd
 from sqlite import sqlite
-from extract_frompdf import extract_text
+from textextraction.extract_frompdf import extract_text
 
 files = ['../exampleData/Unternehmensbefragung/Unternehmensbefragung-2001-kurz.pdf',
          '../exampleData/Unternehmensbefragung/Unternehmensbefragung-2002-kurz.pdf',
@@ -28,14 +32,13 @@ def main():
     for file in files:
         ini += 1
         corpus['doc' + str(ini)] = extract_text(file)
-        #print(extract_text(file))
 
     # initialize
     preproc = TMPreproc(corpus, language='german')
 
     # run the preprocessing pipeline: tokenize, POS tag, lemmatize, transform to
     # lowercase and then clean the tokens (i.e. remove stopwords)
-    preproc.tokenize().pos_tag().lemmatize().tokens_to_lowercase().clean_tokens()
+    preproc.tokenize().pos_tag().lemmatize().clean_tokens() # .tokens_to_lowercase()
 
     print("hi")
     print(preproc.tokens)
@@ -85,11 +88,15 @@ def main():
     plt.show()
 
     # the peak seems to be around n_topics == 140
-    from tmtoolkit.lda_utils.common import print_ldamodel_topic_words, print_ldamodel_doc_topics
+    from tmtoolkit.lda_utils import common
 
     best_model = dict(results_by_n_topics)[150]['model']
-    print_ldamodel_topic_words(best_model.topic_word_, vocab)
-    print_ldamodel_doc_topics(best_model.doc_topic_, doc_labels)
+    print("#################### Best Topics #########################")
+    common.print_ldamodel_topic_words(best_model.topic_word_, vocab)
+    print(common.ldamodel_top_topic_words(best_model.topic_word_, vocab))
+    print("#################### Best Docs #########################")
+    print(common.ldamodel_top_doc_topics(best_model.doc_topic_, doc_labels))
+    common.print_ldamodel_topic_words(best_model.topic_word_, vocab)
 
     print('model with %d topics learnt from %d documents with vocabulary size of %d unique words'
           % (10, len(files), len(vocab)))
@@ -102,11 +109,14 @@ def main():
     print(topic_clouds.keys())
     topic_clouds['topic_1'].save('words.png')
 
-    conn, c = sqlite.openconnection('sqlite/example.db')
-    for file in files:
-        with open(file=file, encoding='utf-8') as f:
-            sqlite.insertData(c, file,['',''],f.read().replace('\n', ''), file.rsplit('.',1)[0])
-    sqlite.closeConnection(conn)
+    #conn, c = sqlite.openconnection('sqlite/example.db')
+    #for file in files:
+    #    with open(file=file, encoding='utf-8') as f:
+    #        sqlite.insertData(c, file,['',''],f.read().replace('\n', ''), file.rsplit('.',1)[0])
+    #sqlite.closeConnection(conn)
+    print("#######")
+
+
 
 
 if __name__ == '__main__':

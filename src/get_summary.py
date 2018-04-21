@@ -120,6 +120,7 @@ Rhythmus zu wiederholen.
 if __name__ == "__main__":
     url = "https://de.wikipedia.org/wiki/Diotima"
     #parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
+    text = text.replace("-\n", "")
     parser = PlaintextParser.from_string(string=text,tokenizer=Tokenizer(LANGUAGE))
     stemmer = Stemmer(LANGUAGE)
 
