@@ -7,23 +7,55 @@
     <title>DocumentBuddy</title>
     <link rel="shortcut icon" type="image/x-icon" href="./favicon.png">
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css">
 
+    <link rel="stylesheet" href="bulma-switch.min.css">
+
     <style type="text/css">
-        html, body, .section, .container {
+        html, body {
             height: 100%;
         }
 
-        .container {
-            display: flex;
-            flex-flow: column;
-
-            align-items: center;
+        .grid-container {
+            display: grid;
+            height:100%;
+            width:100%;
+            grid-template-columns: 10% 10% 10%;
+            grid-template-rows: 10% 80%;
+            grid-gap: 10px;
+            align-content: center;
             justify-content: center;
         }
 
-        .section {
-            padding: 0;
+        .item1 {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+            justify-self: center;
+            align-self: center;
+        }
+
+        .item2 {
+            grid-column: 3 / 4;
+            grid-row: 1 / 2;
+            justify-self: center;
+            align-self: center;
+        }
+
+        .item3 {
+            grid-column: 1 / 4;
+            grid-row: 2 / 3;
+        }
+
+        .item4 {
+            grid-column: 1 / 4;
+            grid-row: 2 / 3;
+        }
+
+        .item5 {
+            grid-column: 4 / 10;
+            grid-row: 2 / 3;
         }
 
         .branding {
@@ -50,25 +82,93 @@
             color: #ffffff;
         }
 
-        #chat-frame {
-            width: 600px;
-            height: 350px;
-
-            margin: 25px;
+        .field {
+            height: 32px;
+            width: 162px;
+            line-height:35px;
+            padding-left: 6px;
+            background-color: rgba(245,245,245,0.85);
+            border-radius: 6px;
+            position: relative;
+            top: 112px;
+            left: 22px;
         }
 
+        .field label {
+            font-weight: bold;
+        }
+
+        .switch[type=checkbox]:checked+label::before {
+            background: #0078d7 !important;
+        }
+
+        #chat-frame {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+            display: block;
+            background: rgba(245,245,245,0.85);
+        }
+
+        #pdfView {
+            height: 100%;
+            width: 100%;
+            display: none;
+            margin: 0px;
+            background: rgba(245,245,245,0.85);
+        }
+
+        #pdfViewHeader {
+            background-color: #0078d7;
+            height: 38px;
+            font-weight: 500;
+            padding: 7px 0px 0px 8px;
+            color: #ffffff;
+            box-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+            font-family: "Segoe UI", sans-serif;
+            font-size: 15px;
+        }
+
+        #icon-cross {
+            float: right;
+            cursor: pointer;
+        }
+
+        #pdfView iframe {
+            height: calc(100% - 38px);
+            width: 100%;
+        }
+
+        #search {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+            display: none;
+            background: rgba(245,245,245,0.85);
+        }
+
+        #searchHeader {
+            background-color: #0078d7;
+            height: 38px;
+            font-weight: 500;
+            padding: 7px 8px 0px 8px;
+            color: #ffffff;
+            box-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+            font-family: "Segoe UI", sans-serif;
+            font-size: 15px;
+        }
+
+        #searchBar {
+            margin: 10px;
+        }
 
         body {
             background: no-repeat center center fixed url('./backdrop.jpg');
             background-size: cover;
         }
 
-        .section {
+        .grid-container {
             background: linear-gradient(to top right, rgba(9,168,31,0.4), rgba(54,15,129,1));
-        }
-
-        #chat-frame {
-            background: rgba(245,245,245,0.85);
         }
 
         .wc-console {
@@ -77,30 +177,75 @@
     </style>
 </head>
 <body>
-    <section class="section">
-        <div class="container">
-            <div class="branding">
-                <span>
-                    <img src="logo.png"/>
-                    <h1>DocumentBuddy</h1>
+    <div class="grid-container">
+        <div class="item1 branding">
+            <span>
+                <img src="logo.png"/>
+                <h1>DocumentBuddy</h1>
+            </span>
+        </div>
+        <div class="item2 field" onclick="botSupport()">
+            <input id="botSupport" type="checkbox" name="botSupport" class="switch" checked>
+            <label for="botSupport">Bot support</label>
+        </div>
+        <div class="item3">
+            <iframe id="chat-frame"></iframe>
+        </div>
+        <script type="text/javascript">
+            var head = document.getElementsByTagName('head')[0]
+            var script = document.createElement('script')
+            script.type = 'text/javascript'
+            script.src = './settings.js'
+
+            script.onload = () => {
+                document.getElementById('chat-frame').src =
+                    'https://webchat.botframework.com/embed/DocumentBuddy?s=' +
+                    settings.webchat_secret
+            }
+
+            window.addEventListener('keydown', function (e) {
+                if(e.keyCode == 32) {
+                    document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10% 10% 10% 10% 10% 10% 10%";
+                    document.getElementById("pdfView").style.display = "inline-block";
+                } else if(e.keyCode == 27) {
+                    document.getElementById("pdfView").style.display = "none";
+                    document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
+                }
+            });
+            function test1() {
+                    document.getElementById("pdfView").style.display = "none";
+                    document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
+            }
+
+            head.appendChild(script);
+
+            function botSupport() {
+                if(document.getElementById("botSupport").checked) {
+                    document.getElementById("chat-frame").style.display = "initial";
+                    document.getElementById("search").style.display = "none";
+                } else {
+                    document.getElementById("search").style.display = "initial";
+                    document.getElementById("chat-frame").style.display = "none";
+                }
+            }
+        </script>
+        <div id="search" class="item4">
+            <div id="searchHeader">Search</div>
+            <div id="searchBar" class="control has-icons-right">
+                <input class="input is-medium" type="text" placeholder="Search">
+                <span class="icon is-medium is-right">
+                    <i class="fas fa-search"></i>
                 </span>
             </div>
-            <iframe id="chat-frame"></iframe>
-            <script type="text/javascript">
-                var head = document.getElementsByTagName('head')[0]
-                var script = document.createElement('script')
-                script.type = 'text/javascript'
-                script.src = './settings.js'
-
-                script.onload = () => {
-                    document.getElementById('chat-frame').src =
-                        'https://webchat.botframework.com/embed/DocumentBuddy?s=' +
-                        settings.webchat_secret
-                }
-
-                head.appendChild(script)
-            </script>
         </div>
-    </section>
-</body>
+        <div id="pdfView" class="item5">
+            <div id="pdfViewHeader" class="has-icon-right">
+                PDF, hab ich recht!?
+                <span id="icon-cross" class="icon is-medium is-right" onclick="test1();">
+                    <i class="fas fa-times"></i>
+                </span>
+            </div>
+            <iframe src="test.pdf#view=FitH"></iframe>
+        </div>
+    </body>
 </html>
