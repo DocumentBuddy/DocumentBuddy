@@ -1,11 +1,35 @@
+# -*- coding: utf-8 -*-
 # import fitz
 # import time
 # import re
+import platform
+import os
 from tika import parser
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfdocument import PDFDocument
+import PyPDF2
 
-# path "../exampleDate/test.pdf"
+
 def extract_text(path):
-    return parser.from_file(path)['content']
+    try:
+        return parser.from_file(path, headers={'charset': 'utf8'})
+    except UnicodeEncodeError:
+        return ""
+        pass
+        #with open(path, "rb") as pdf_file:
+        #    read_pdf = PyPDF2.PdfFileReader(pdf_file)
+        #    page_content = ""
+        #    for i in range(read_pdf.getNumPages()):
+        #        page = read_pdf.getPage(i)
+        #        page_content += page.extractText()
+    #udata = text.decode("utf-8")
+    #data=udata.encode("latin-1","ignore")
+
+def get_metadata(path):
+    fp = open(path, 'rb')
+    parser = PDFParser(fp)
+    doc = PDFDocument(parser)
+    return doc.info[0] if not len(doc.info) == 0 else {}
 
 """
 def extract_images(path):
@@ -40,3 +64,27 @@ def extract_images(path):
     print("run time", round(t1-t0, 2))
     print("extracted images", imgcount)
 """
+
+
+def get_creation_date(path_to_file):
+    """
+    Try to get the date that a file was created, falling back to when it was
+    last modified if that isn't possible.
+    See http://stackoverflow.com/a/39501288/1709587 for explanation.
+    """
+    if platform.system() == 'Windows':
+        return os.path.getctime(path_to_file)
+    else:
+        stat = os.stat(path_to_file)
+        try:
+            return stat.st_birthtime
+        except AttributeError:
+            # We're probably on Linux. No easy way to get creation dates here,
+            # so we'll settle for when its content was last modified.
+            return stat.st_mtime
+
+if __name__ == "__main__":
+    # for sentence in get_summary(text):
+    #    print(sentence)
+    filepath = "../exampleData/Unternehmensbefragung/Unternehmensbefragung-2017-–-Kreditzugang-bestenfalls-stabil.pdf"
+    print(get_metadata(filepath))
