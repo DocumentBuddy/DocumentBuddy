@@ -12,6 +12,8 @@
 
   - [Get Documents by like Keyword](#get-documents-by-like-keyword)
 
+  - [Get Documents by more than one Keyword](#get-documents-by-more-than-one-keyword)
+
 - [Insert Data](#insert-data)
 
   - [Insert Documents without Keywords](#insert-documents-without-keywords)
@@ -19,10 +21,6 @@
   - [Insert Documents with Keywords](#insert-documents-with-keywords)
 
   - [Insert Keywords](#insert-keywords)
-
-
-
-
 
 ## Get Data
 
@@ -38,7 +36,7 @@ URL/database/api/v1.0/documents/
 
 GET Request
 
-``` 
+```
 URL/database/api/v1.0/keywords/
 ```
 
@@ -46,7 +44,7 @@ URL/database/api/v1.0/keywords/
 
 GET Request
 
-``` 
+```
 URL/database/api/v1.0/documents/keyword/exact/<string:keyword>
 ```
 
@@ -72,13 +70,14 @@ URL/database/api/v1.0/keywords/many/
 
 ```json
 {
-	"keywords": ["Keyword", "some more Keywords"] 
+    "keywords": ["Keyword", "some more Keywords"] 
 }
 ```
 
 ## Insert Data
 
 ### Insert Documents without Keywords
+
 It will automatically detect wether the request was entered with or without keywords
 
 POST Request
@@ -87,20 +86,20 @@ POST Request
 URL/database/api/v1.0/documents/insert/
 ```
 
-**Header:** `"content-type" = "application/json"`
+**Header:** `"content-type" = "application/json"`
 
 **Body:**
 
 ```json
 {
-	"link": "Path/To/Any/File"	
-	"text": "some text",
-	"doctype": "some doctype",
-	"toc": "Table of content",
-	"author": "AnyName",
-	"name_entities": "Name1 Name2",
-	"pages":4,
-	"date":"2018-10-10"
+    "link": "Path/To/Any/File"    
+    "text": "some text",
+    "doctype": "some doctype",
+    "toc": "Table of content",
+    "author": "AnyName",
+    "name_entities": "Name1 Name2",
+    "pages":4,
+    "date":"2018-10-10"
 }
 ```
 
@@ -118,15 +117,15 @@ URL/database/api/v1.0/documents/insert/
 
 ```
 {
-	"link": "Path/To/File"	
-	"text": "some text",
-	"keywords": ["Keyword", "some more Keywords"],
-	"doctype": "some doctype",
-	"toc": "Table of content",
-	"author": "AnyName",
-	"name_entities": "Name1 Name2",
-	"pages":4,
-	"date":"2018-10-10"
+    "link": "Path/To/File"    
+    "text": "some text",
+    "keywords": ["Keyword", "some more Keywords"],
+    "doctype": "some doctype",
+    "toc": "Table of content",
+    "author": "AnyName",
+    "name_entities": "Name1 Name2",
+    "pages":4,
+    "date":"2018-10-10"
 }
 ```
 
@@ -144,9 +143,7 @@ URL/database/api/v1.0/keywords/insert/
 
 ```json
 {
-	"id": 1,
-	"keywords": ["Keyword", "some more Keywords"] 
+    "id": 1,
+    "keywords": ["Keyword", "some more Keywords"] 
 }
 ```
-
-
