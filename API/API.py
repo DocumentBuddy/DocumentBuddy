@@ -3,21 +3,19 @@ from sqlite import Sqlite
 
 app = Flask(__name__)
 
-def get_documents_by_keyword(keyword, isLike):
-    if(isLike):
+
+def get_documents_by_keyword(keyword, is_like):
+    if is_like:
         documents = sqlite.selectAllIncludingKeyword(keyword)
     else:
         documents = sqlite.selectAllPreciseByKeyword(keyword)
     if len(documents) == 0:
         abort(404)
-    jsonObjects = []
+    json_objects = []
     for document in documents:
-        object = {}
-        object['link'] = document[0]
-        object['text'] = document[1]
-        object['doctype'] = document[2]
-        jsonObjects.append(object)
-    return jsonify(jsonObjects)
+        json_object = {'link': document[0], 'text': document[1], 'doctype': document[2]}
+        json_objects.append(json_object)
+    return jsonify(json_objects)
 
 
 @app.route('/')
