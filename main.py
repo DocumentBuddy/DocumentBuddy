@@ -1,6 +1,5 @@
-from API.API import app
-from API.sqlite import Sqlite
+from api.api import app
+
 
 if __name__ == '__main__':
-    sqlite = Sqlite('./example.db')
     app.run()
