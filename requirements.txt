@@ -11,4 +11,4 @@ lda
 tika
 pytesseract
 sumy
-pdfminer
+pdfminer.six
