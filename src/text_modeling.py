@@ -152,7 +152,7 @@ def get_summary(text: str, lang: str, count: 5):
 
     summarizer = Summarizer(stemmer)
     summarizer.stop_words = get_stop_words(lang)
-    return list(summarizer(parser.document, count))
+    return " ".join(list(map(str, summarizer(parser.document, count))))
 
 
 if __name__ == '__main__':
