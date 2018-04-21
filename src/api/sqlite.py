@@ -52,7 +52,6 @@ class Sqlite:
     #   of main
     # selectLinkIncludingKeyword - same as before, but returns a link
     # selectAll(database) - SELECT * FROM database
-
     def select_all_precise_by_keyword(self, keyword):
         self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM keywords WHERE keyword="{}")'.format(keyword))
         return self.c.fetchall()
@@ -96,18 +95,34 @@ class Sqlite:
             return_data.append(self.c.fetchone())
         return return_data
 
+    #select any database
     def select_all(self, database_name):
         self.c.execute("SELECT * FROM {}".format(database_name))
         return self.c.fetchall()
 
+    # select id returns main
     def select_from_id(self, id):
         self.c.execute("SELECT * FROM main WHERE id=?",(id,))
         return self.c.fetchall()
 
+    # select id returns link
     def select_link_from_id(self, id):
         self.c.execute("SELECT link FROM main WHERE id=?", (id,))
         return self.c.fetchone()[0]
-    # Select doctype
+
+    # select author
+    def select_like_from_author(self, author):
+        self.c.execute("SELECT * FROM main WHERE author LIKE ?", ('%' + author + '%',))
+        return self.c.fetchall()
+
+    # select doctype
+    def select_like_from_doctype(self, doctype):
+        self.c.execute("SELECT * FROM main WHERE doctype LIKE ?", ('%' + doctype + '%',))
+        return self.c.fetchall()
+
+    def select_text_from_id(self, id):
+        self.c.execute("SELECT text FROM main WHERE id = ?",(id,))
+        return self.c.fetchone()
 
     # update
     # updateMain(link, ("updateRow1", "updateRow2"), ("updateValue1","updateValue2"))
@@ -126,7 +141,7 @@ class Sqlite:
     # create Tables
     def create_table_main(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS main (ID INTEGER PRIMARY KEY AUTOINCREMENT, link text, text text,"
-                       " doctype text, toc text, author text, name_entities text, pages INTEGER, date text)")
+                       " doctype text, toc text, author text, pages INTEGER, date text)")
 
     def create_table_keywords(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS keywords (id INTEGER, keyword text, "

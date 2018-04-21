@@ -40,12 +40,19 @@ GET Request
 URL/database/api/v1.0/keywords/
 ```
 
+### Get all name_entities
+GET Request
+
+```
+URL/database/api/v1.0/names/
+```
+
 ### Get Documents by exact Keyword
 
 GET Request
 
 ```
-URL/database/api/v1.0/documents/keyword/exact/<string:keyword>
+URL/database/api/v1.0/keyword/exact/<string:keyword>
 ```
 
 ### Get Documents by like Keyword
@@ -53,10 +60,10 @@ URL/database/api/v1.0/documents/keyword/exact/<string:keyword>
 GET Request
 
 ```
-URL/database/api/v1.0/documents/keyword/like/<string:keyword>
+URL/database/api/v1.0/keyword/like/<string:keyword>
 ```
 
-### Get Documents by  more than one Keyword
+### Get Documents by more than one Keyword
 
 POST Request
 
@@ -71,6 +78,54 @@ URL/database/api/v1.0/keywords/many/
 ```json
 {
     "keywords": ["Keyword", "some more Keywords"] 
+}
+```
+
+### Get Documents by like Author
+
+GET Request
+
+```
+URL/database/api/v1.0/author/like/<string:author>
+```
+
+### Get Documents by like Doctype
+
+GET Request
+
+```
+URL/database/api/v1.0/doctype/like/<string:doctype>
+```
+
+### Get Documents by exact name
+
+GET Request
+
+```
+URL/database/api/v1.0/name/exact/<string:name>
+```
+
+### Get Documents by like name
+
+GET Request
+
+```
+URL/database/api/v1.0/name/like/<string:name>
+```
+
+### Get Summary by ID
+
+GET Request
+
+```
+URL/database/api/v1.0/summary/<int:id>
+```
+
+returns
+
+```
+{
+  "summary": "Hallo Hallo"
 }
 ```
 
