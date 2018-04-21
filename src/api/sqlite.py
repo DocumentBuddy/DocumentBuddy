@@ -3,8 +3,6 @@ import os
 import sqlite3
 import itertools
 
-from Scripts._sqlite3 import IntegrityError
-
 
 class Sqlite:
     def dict_factory(self, row):
