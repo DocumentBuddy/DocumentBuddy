@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort, request, g, render_template, send_file, send_from_directory
+from flask import Flask, jsonify, abort, request, g, render_template, send_file, send_from_directory,redirect
 import sqlite3
 import jinja2
 
@@ -12,6 +12,8 @@ my_loader = jinja2.ChoiceLoader([
 ])
 app.jinja_loader = my_loader
 
+pdfpath = "test.pdf"
+idd = 10
 
 def get_documents_by_keyword(keyword, is_like):
     if is_like:
@@ -37,20 +39,34 @@ def get_documents_by_name(name, is_like):
         json_objects.append(json_object)
     return jsonify(json_objects)
 
+@app.route('/database/api/v1.0/documents/getid', methods=['GET'])
+def select_idd() -> int:
+    global idd
+    return idd
+
 @app.route('/')
 def hello_world():
-    return render_template('index.html',  pdfpath="test.pdf")
+    #pdfpath = "test.pdf" if id==10 else "/exampleData/EplusPDF.pdf"#get_documents_by_keyword()
+    return render_template('index.html',  pdfpath=pdfpath)
     #return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
+
+@app.route('/exampleData/<path:path>')
+def get_examplepdf(path):
+    print("hallo")
+    return send_file("../../exampleData/"+path)
 
 @app.route('/<path:path>')
 def get_ressources(path):
     print("hallo")
     return send_file("../web/"+path)
 
-@app.route('/database/api/v1.0/pdf/<int:id>')
-def get_pdf(path):
+@app.route('/pdf/<int:id>', methods=['POST'])
+def get_pdf(id):
     print("hallo")
-    return render_template('index.html',  pdfpath="test.pdf")
+    global pdfpath
+    pdfpath = se_id(id)
+    return redirect('/')
+    #return render_template('index.html',  pdfpath=pdfpath)
 
 @app.route('/database/api/v1.0/documents/', methods=['GET'])
 def get_all_documents():
@@ -161,6 +177,7 @@ def insert_keywords():
         json_object = {'id': request.json['id'], 'keywords': request.json['keywords']}
         return jsonify(json_object), 201
 
+
 @app.route('/database/api/v1.0/names/', methods=['GET'])
 def get_all_names():
     documents = get_db().select_all('names')
@@ -170,6 +187,13 @@ def get_all_names():
         json_objects.append(json_object)
     return jsonify(json_objects)
 
+
+def se_id(id: int) -> str:
+    data_container = get_db().select_from_id(id)
+    json_objects=[]
+    for data in data_container:
+        print(data)
+        return data[1]
 
 @app.route('/database/api/v1.0/documents/id/<int:id>', methods=['GET'])
 def select_id(id: int) -> int:
