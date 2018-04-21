@@ -2,7 +2,7 @@ from flask import Flask, jsonify, abort, request
 
 try:
     from sqlite import Sqlite
-except ModuleNotFoundError:
+except BaseException:
     from .sqlite import Sqlite
 
 app = Flask(__name__)
