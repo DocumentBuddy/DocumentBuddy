@@ -55,6 +55,8 @@ def get_pdf(path):
     print("hallo")
     return render_template('index.html',  pdfpath="test.pdf")
 
+
+# Get all documents
 @app.route('/database/api/v1.0/documents/', methods=['GET'])
 def get_all_documents():
     documents = get_db().select_all('main')
@@ -66,32 +68,38 @@ def get_all_documents():
     return jsonify(json_objects)
 
 
+# Delete :(
 @app.route('/database/api/v1.0/documents/delete/all', methods=['GET'])
 def delete_all_documents():
     get_db().truncate_database('main')
     return 204
 
 
+# GET data from exact keyword
 @app.route('/database/api/v1.0/keyword/exact/<string:keyword>', methods=['GET'])
 def get_documents_by_keyword_exact(keyword: str) -> str:
     return get_documents_by_keyword(keyword, False)
 
 
+# GET data from like keyword
 @app.route('/database/api/v1.0/keyword/like/<string:keyword>', methods=['GET'])
 def get_documents_by_keyword_like(keyword):
     return get_documents_by_keyword(keyword, True)
 
 
+# GET data from exact name (name_entities)
 @app.route('/database/api/v1.0/name/exact/<string:name>', methods=['GET'])
 def get_documents_by_name_exact(name: str) -> str:
     return get_documents_by_name(name, False)
 
 
+# GET data from like name (name_entities)
 @app.route('/database/api/v1.0/name/like/<string:name>', methods=['GET'])
 def get_documents_by_name_like(name: str) -> str:
     return get_documents_by_name(name, True)
 
 
+# GET all keywords
 @app.route('/database/api/v1.0/keywords/', methods=['GET'])
 def get_all_keywords():
     documents = get_db().select_all('keywords')
@@ -102,6 +110,7 @@ def get_all_keywords():
     return jsonify(json_objects), 201
 
 
+# GET data from many keywords
 @app.route('/database/api/v1.0/keywords/many/', methods=['POST'])
 def select_keywords():
     if not request.json or 'keywords' not in request.json:
@@ -116,6 +125,7 @@ def select_keywords():
     return jsonify(json_objects), 201
 
 
+# INSERT data on keywords
 @app.route('/database/api/v1.0/keywords/insert/', methods=['POST'])
 def insert_keywords():
         if not request.json or 'id' not in request.json or 'keywords' not in request.json:
@@ -128,6 +138,7 @@ def insert_keywords():
         return jsonify(json_object), 201
 
 
+# GET all names
 @app.route('/database/api/v1.0/names/', methods=['GET'])
 def get_all_names():
     documents = get_db().select_all('names')
@@ -138,6 +149,7 @@ def get_all_names():
     return jsonify(json_objects)
 
 
+# GET data from exact author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
 def get_data_from_author(author: str)->str:
     documents = get_db().select_like_from_author(author)
@@ -149,6 +161,7 @@ def get_data_from_author(author: str)->str:
     return jsonify(json_objects), 201
 
 
+# GET data from like author
 @app.route('/database/api/v1.0/doctype/like/<string:doctype>', methods=['GET'])
 def get_data_from_doctype(doctype: str)->str:
     documents = get_db().select_like_from_doctype(doctype)
@@ -159,6 +172,8 @@ def get_data_from_doctype(doctype: str)->str:
         json_objects.append(json_object)
     return jsonify(json_objects), 201
 
+
+# GET data from ID
 @app.route('/database/api/v1.0/id/<int:id>', methods=['GET'])
 def select_id(id: int) -> int:
     data_container = get_db().select_from_id(id)
@@ -169,6 +184,7 @@ def select_id(id: int) -> int:
         json_objects.append(json_object)
     return jsonify(json_objects), 201
 
+# GET data from many names
 @app.route('/database/api/v1.0/names/many/', methods=['POST'])
 def select_names():
     if not request.json or 'name' not in request.json:
@@ -183,6 +199,7 @@ def select_names():
     return jsonify(json_objects), 201
 
 
+# INSERT data into main
 @app.route('/database/api/v1.0/documents/insert/', methods=['POST'])
 def insert_documents():
     if not request.json or 'link' not in request.json or 'text' not in request.json or 'doctype' not in request.json \

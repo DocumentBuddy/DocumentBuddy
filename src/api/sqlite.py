@@ -135,7 +135,7 @@ class Sqlite:
     # create Tables
     def create_table_main(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS main (ID INTEGER PRIMARY KEY AUTOINCREMENT, link text, text text,"
-                       " doctype text, toc text, author text, name_entities text, pages INTEGER, date text)")
+                       " doctype text, toc text, author text, pages INTEGER, date text)")
 
     def create_table_keywords(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS keywords (id INTEGER, keyword text, "
