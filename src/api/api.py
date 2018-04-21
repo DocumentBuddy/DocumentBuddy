@@ -175,7 +175,7 @@ def get_data_from_doctype(doctype: str)->str:
 
 # GET data from ID
 @app.route('/database/api/v1.0/id/<int:id>', methods=['GET'])
-def select_id(id: int) -> int:
+def select_id(id: int)-> str:
     data_container = get_db().select_from_id(id)
     json_objects=[]
     for data in data_container:
@@ -183,6 +183,13 @@ def select_id(id: int) -> int:
             data[4], 'author':  data[5], 'pages':  data[6], 'date':  data[7]}
         json_objects.append(json_object)
     return jsonify(json_objects), 201
+
+# GET data from ID
+@app.route('/database/api/v1.0/summary/<int:id>', methods=['GET'])
+def select_text_from_id(id: int)-> str:
+    data = get_db().select_text_from_id(id)
+    json_object = {'summary': data[0]}
+    return jsonify(json_object), 201
 
 # GET data from many names
 @app.route('/database/api/v1.0/names/many/', methods=['POST'])
