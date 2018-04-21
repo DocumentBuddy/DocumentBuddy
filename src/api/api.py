@@ -47,6 +47,11 @@ def get_ressources(path):
     print("hallo")
     return send_file("../web/"+path)
 
+@app.route('/database/api/v1.0/pdf/<int:id>')
+def get_pdf(path):
+    print("hallo")
+    return render_template('index.html',  pdfpath="test.pdf")
+
 @app.route('/database/api/v1.0/documents/', methods=['GET'])
 def get_all_documents():
     documents = get_db().select_all('main')
