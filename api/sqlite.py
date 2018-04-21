@@ -3,8 +3,6 @@ import os
 import sqlite3
 import itertools
 
-from Scripts._sqlite3 import IntegrityError
-
 
 class Sqlite:
     def __init__(self, database_path=None):
@@ -74,7 +72,7 @@ class Sqlite:
         return self.c.fetchall()
 
     def select_all_including_name(self, name):
-        self.c.execute("SELECT * FROM main WHERE id IN (SELECT DISTINCT id FROM names WHERE names LIKE ?", ('%' + name + '%',))
+        self.c.execute("SELECT * FROM main WHERE id IN (SELECT DISTINCT id FROM names WHERE names LIKE ?)", ('%' + name + '%',))
         return self.c.fetchall()
 
     def select_all_precise_by_name(self, name):
