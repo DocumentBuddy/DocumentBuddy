@@ -1,12 +1,21 @@
 from tmtoolkit.preprocess import TMPreproc
 from tmtoolkit.corpus import Corpus
 import pandas as pd
-import tmtoolkit
+from .sqlite import sqlite
+
+files=['../exampleData/Faust_I.txt']
+
+def pre():
+    conn, c = sqlite.openconnection('sqlite/example.db')
+    for file in files:
+        with open(file=file) as f:
+            sqlite.insertData(c, file,['',''],f.read().replace('\n', ''), file.rsplit('.',1)[0])
+    sqlite.closeConnection(conn)
 
 def main():
     # load "(text) files
     corpus = Corpus()
-    corpus.add_files(files=['../exampleData/Faust_I.txt'], encoding='utf-8')
+    corpus.add_files(files=files, encoding='utf-8')
 
     # initialize
     preproc = TMPreproc(corpus, language='german')
@@ -60,6 +69,12 @@ def main():
     best_model = dict(results_by_n_topics)[140]['model']
     print_ldamodel_topic_words(best_model.topic_word_, vocab)
     print_ldamodel_doc_topics(best_model.doc_topic_, doc_labels)
+
+    conn, c = sqlite.openconnection('sqlite/example.db')
+    for file in files:
+        with open(file=file) as f:
+            sqlite.insertData(c, file,['',''],f.read().replace('\n', ''), file.rsplit('.',1)[0])
+    sqlite.closeConnection(conn)
 
 
 if __name__ == '__main__':
