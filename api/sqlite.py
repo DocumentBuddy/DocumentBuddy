@@ -72,11 +72,11 @@ class Sqlite:
         return self.c.fetchall()
 
     def select_all_including_name(self, name):
-        self.c.execute("SELECT * FROM main WHERE id IN (SELECT DISTINCT id FROM names WHERE names LIKE ?)", ('%' + name + '%',))
+        self.c.execute("SELECT * FROM main WHERE id IN (SELECT DISTINCT id FROM names WHERE name LIKE ?)", ('%' + name + '%',))
         return self.c.fetchall()
 
     def select_all_precise_by_name(self, name):
-        self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM name WHERE name="{}")'.format(name))
+        self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM names WHERE name="{}")'.format(name))
         return self.c.fetchall()
 
     # Select more keywords
