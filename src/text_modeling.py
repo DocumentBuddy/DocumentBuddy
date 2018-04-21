@@ -33,7 +33,7 @@ def load_obj(path):
         return pickle.load(f)
 
 
-def train_model():
+def train_model(files: list):
     import os.path
     from tmtoolkit.lda_utils import tm_lda, tm_gensim, tm_sklearn, visualize
     import matplotlib.pyplot as plt
@@ -42,7 +42,8 @@ def train_model():
 
     picklefile = 'test.pickle'
 
-    if True:#not os.path.isfile(picklefile):
+    if not os.path.isfile(picklefile):
+        print("Training new Model")
         # load "(text) files
         # corpus = Corpus()
         # corpus.add_files(files=files, encoding='utf-8')
@@ -146,12 +147,12 @@ def create_viz():
 
 def get_summary(text: str, lang: str, count: 5):
     text = text.replace("-\n", "")
-    parser = PlaintextParser.from_string(string=text, tokenizer=Tokenizer(LANGUAGE))
-    stemmer = Stemmer(LANGUAGE)
+    parser = PlaintextParser.from_string(string=text, tokenizer=Tokenizer(lang))
+    stemmer = Stemmer(lang)
 
     summarizer = Summarizer(stemmer)
-    summarizer.stop_words = get_stop_words(LANGUAGE)
-    return list(summarizer(parser.document, SENTENCES_COUNT))
+    summarizer.stop_words = get_stop_words(lang)
+    return list(summarizer(parser.document, count))
 
 
 if __name__ == '__main__':
