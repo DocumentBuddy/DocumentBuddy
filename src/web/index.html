@@ -18,6 +18,16 @@
             height: 100%;
         }
 
+        body {
+            background: no-repeat center center fixed url('./backdrop.jpg');
+            background-size: cover;
+        }
+
+        @-webkit-keyframes fadeOut {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
         .grid-container {
             display: grid;
             height:100%;
@@ -27,6 +37,7 @@
             grid-gap: 10px;
             align-content: center;
             justify-content: center;
+            background: linear-gradient(to top right, rgba(9,168,31,0.4), rgba(54,15,129,1));
         }
 
         .item1 {
@@ -124,6 +135,11 @@
             display: none;
             margin: 0px;
             background: rgba(245,245,245,0.85);
+            -webkit-animation-name: fadeOut;
+            -webkit-animation-duration: 0.3s;
+            -webkit-animation-direction: alternate;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-timing-function: ease-out;
         }
 
         #pdfViewHeader {
@@ -169,19 +185,6 @@
         #searchBar {
             margin: 10px;
         }
-
-        body {
-            background: no-repeat center center fixed url('./backdrop.jpg');
-            background-size: cover;
-        }
-
-        .grid-container {
-            background: linear-gradient(to top right, rgba(9,168,31,0.4), rgba(54,15,129,1));
-        }
-
-        .wc-console {
-            background: #00ff00;
-        }
     </style>
 </head>
 <body>
@@ -215,14 +218,23 @@
                 if(e.keyCode == 32) {
                     document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10% 10% 10% 10% 10% 10% 10%";
                     document.getElementById("pdfView").style.display = "inline-block";
+                    setTimeout(function () {
+                        document.getElementById("pdfView").style.WebkitAnimationPlayState = "paused";
+                    }, 300);
                 } else if(e.keyCode == 27) {
-                    document.getElementById("pdfView").style.display = "none";
-                    document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
+                    document.getElementById("pdfView").style.WebkitAnimationPlayState = "running";
+                    setTimeout(function () {
+                        document.getElementById("pdfView").style.display = "none";
+                        document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
+                    }, 300);
                 }
             });
             function test1() {
-                    document.getElementById("pdfView").style.display = "none";
-                    document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
+                    document.getElementById("pdfView").style.WebkitAnimationPlayState = "running";
+                    setTimeout(function () {
+                        document.getElementById("pdfView").style.display = "none";
+                        document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
+                    }, 300);
             }
 
             head.appendChild(script);
@@ -253,7 +265,7 @@
                     <i class="fas fa-times"></i>
                 </span>
             </div>
-            <iframe src="test.pdf#view=FitH"></iframe>
+            <iframe src="test.pdf#view=Fit"></iframe>
         </div>
     </body>
 </html>
