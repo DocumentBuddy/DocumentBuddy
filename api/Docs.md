@@ -58,13 +58,34 @@ GET Request
 URL/database/api/v1.0/documents/keyword/like/<string:keyword>
 ```
 
+### Get Documents by  more than one Keyword
 
+POST Request
+
+```
+URL/database/api/v1.0/keywords/many/
+```
+
+**Header:** `"content-type" = "application/json"`
+
+**Body:**
+
+```json
+{
+	"keywords": ["Keyword", "some more Keywords"] 
+}
+```
 
 ## Insert Data
 
 ### Insert Documents without Keywords
+It will automatically detect wether the request was entered with or without keywords
 
 POST Request
+
+```
+URL/database/api/v1.0/documents/insert/
+```
 
 **Header:** `"content-type" = "application/json"`
 
@@ -72,15 +93,24 @@ POST Request
 
 ```json
 {
-	"link": "Path/To/File",
+	"link": "Path/To/Any/File"	
 	"text": "some text",
-	"doctype": "some doctype"
+	"doctype": "some doctype",
+	"toc": "Table of content",
+	"author": "AnyName",
+	"name_entities": "Name1 Name2",
+	"pages":4,
+	"date":"2018-10-10"
 }
 ```
 
 ### Insert Documents with Keywords
 
 POST Request
+
+```
+URL/database/api/v1.0/documents/insert/
+```
 
 **Header:** `"content-type" = "application/json"`
 
@@ -91,7 +121,12 @@ POST Request
 	"link": "Path/To/File"	
 	"text": "some text",
 	"keywords": ["Keyword", "some more Keywords"],
-	"doctype": "some doctype"
+	"doctype": "some doctype",
+	"toc": "Table of content",
+	"author": "AnyName",
+	"name_entities": "Name1 Name2",
+	"pages":4,
+	"date":"2018-10-10"
 }
 ```
 
@@ -99,13 +134,17 @@ POST Request
 
 POST Request
 
+```
+URL/database/api/v1.0/keywords/insert/
+```
+
 **Header:** `"content-type" = "application/json"`
 
 **Body:**
 
 ```json
 {
-	"link": "Path/To/File",
+	"id": 1,
 	"keywords": ["Keyword", "some more Keywords"] 
 }
 ```

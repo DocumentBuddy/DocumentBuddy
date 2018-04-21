@@ -3,6 +3,8 @@ import os
 import sqlite3
 import itertools
 
+from Scripts._sqlite3 import IntegrityError
+
 
 class Sqlite:
     def dict_factory(self, row):
@@ -40,11 +42,11 @@ class Sqlite:
 
     def insert_data_in_main(self, link, text, doctype, toc, author, name_entities, pages, date):
         self.c.execute("INSERT INTO main (link, text, doctype, toc, author, name_entities, pages, date) VALUES "
-                       "(?,?,?,?,?,?,?)", (link, text, doctype, toc, author,name_entities, pages, date))
+                       "(?,?,?,?,?,?,?,?)", (link, text, doctype, toc, author, name_entities, pages, date))
 
     def insert_data_in_keywords(self, id, keywords):
         for keyword in keywords:
-            self.c.execute('INSERT INTO keywords (id,keyword) VALUES ("{}","{}")', (id, keyword))
+            self.c.execute('INSERT INTO keywords (id,keyword) VALUES ("{}","{}")'.format(id, keyword))
 
     # Select
     # selectAllPreciseKeyword - enter an Keyword, check if the keyword is exactly in the tuple of keywords and returns
@@ -82,12 +84,18 @@ class Sqlite:
         for keyword in keywords:
             self.c.execute("SELECT DISTINCT id FROM keywords WHERE keyword LIKE ?", ('%' + keyword + '%',))
             data.append(self.c.fetchall())
+            print(data)
             data = list(itertools.chain.from_iterable(data))
             data = [list(i) if isinstance(i, tuple) else [i] for i in data]
             newdata = []
             for d in data:
                 newdata.append(d[0])
-        return newdata
+        newdata=list(set(newdata))
+        return_data = []
+        for item in newdata:
+            self.c.execute("SELECT * FROM main WHERE ID = ?", (item,))
+            return_data.append(self.c.fetchone())
+        return return_data
 
     # Select doctype
 
@@ -105,13 +113,15 @@ class Sqlite:
         self.c.execute("DELETE FROM {}".format(database_name))
         return self.c.fetchall()
 
+    # create Tables
     def create_table_main(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS main (ID INTEGER PRIMARY KEY AUTOINCREMENT, link text, text text,"
                        " doctype text, toc text, author text, name_entities text, pages INTEGER, date text)")
 
     def create_table_keywords(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS keywords (id INTEGER, keyword text, "
-                       "FOREIGN KEY(id) REFERENCES main(ID))")
+                       "FOREIGN KEY(id) REFERENCES main(ID), PRIMARY  KEY (id, keyword))")
 
+    # Drop Tables
     def drop_table(self, database_name):
         self.c.execute("DROP TABLE IF EXISTS {}".format(database_name))
