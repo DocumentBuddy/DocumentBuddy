@@ -1,4 +1,5 @@
 # import
+import os
 import sqlite3
 import itertools
 
@@ -10,12 +11,13 @@ class Sqlite:
             d[col[0]] = row[idx]
         return d
 
-    def __init__(self):
-        self.conn = sqlite3.connect('example.db')
-        self.c = self.conn.cursor()
-
-    def __init__(self, database_filename):
-        self.conn = sqlite3.connect(database_filename)
+    def __init__(self, database_path=None):
+        if database_path is None:
+            database_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                'example.db'
+            )
+        self.conn = sqlite3.connect(database_path)
         self.c = self.conn.cursor()
 
     # Close Connection
