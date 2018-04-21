@@ -214,30 +214,31 @@
                     settings.webchat_secret
             }
 
+            head.appendChild(script);
+
             window.addEventListener('keydown', function (e) {
                 if(e.keyCode == 32) {
-                    document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10% 10% 10% 10% 10% 10% 10%";
-                    document.getElementById("pdfView").style.display = "inline-block";
-                    setTimeout(function () {
-                        document.getElementById("pdfView").style.WebkitAnimationPlayState = "paused";
-                    }, 300);
+                    fadeIn();
                 } else if(e.keyCode == 27) {
-                    document.getElementById("pdfView").style.WebkitAnimationPlayState = "running";
-                    setTimeout(function () {
-                        document.getElementById("pdfView").style.display = "none";
-                        document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
-                    }, 300);
+                    fadeOut();
                 }
             });
-            function test1() {
+
+            function fadeIn() {
+                document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10% 10% 10% 10% 10% 10% 10%";
+                document.getElementById("pdfView").style.display = "inline-block";
+                setTimeout(function () {
+                    document.getElementById("pdfView").style.WebkitAnimationPlayState = "paused";
+                }, 300);
+            }
+
+            function fadeOut() {
                     document.getElementById("pdfView").style.WebkitAnimationPlayState = "running";
                     setTimeout(function () {
                         document.getElementById("pdfView").style.display = "none";
                         document.getElementsByClassName("grid-container")[0].style.gridTemplateColumns = "10% 10% 10%";
                     }, 300);
             }
-
-            head.appendChild(script);
 
             function botSupport() {
                 if(document.getElementById("botSupport").checked) {
@@ -261,7 +262,7 @@
         <div id="pdfView" class="item5">
             <div id="pdfViewHeader" class="has-icon-right">
                 PDF, hab ich recht!?
-                <span id="icon-cross" class="icon is-medium is-right" onclick="test1();">
+                <span id="icon-cross" class="icon is-medium is-right" onclick="fadeOut();">
                     <i class="fas fa-times"></i>
                 </span>
             </div>
