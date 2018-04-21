@@ -12,8 +12,6 @@ my_loader = jinja2.ChoiceLoader([
 ])
 app.jinja_loader = my_loader
 
-pdfpath = "test.pdf"
-idd = 10
 
 def get_documents_by_keyword(keyword, is_like):
     if is_like:
@@ -43,6 +41,7 @@ def get_documents_by_name(name, is_like):
 
 @app.route('/')
 def hello_world():
+    print(g.pdfpath)
     return render_template('index.html',  pdfpath="test.pdf")
     # return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
 
@@ -59,11 +58,13 @@ def get_ressources(path):
 
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
-    print("hallo")
-    global pdfpath
-    pdfpath = se_id(id)
+    g.pdfpath = se_id(id)
     return redirect('/')
-    #return render_template('index.html',  pdfpath=pdfpath)
+
+@app.route('/pdf/getid', methods=['POST'])
+def get_pdf(id):
+    g.pdfpath = se_id(id)
+    return jsonify({"path":g.pdfpath})
 
 
 # Get all documents

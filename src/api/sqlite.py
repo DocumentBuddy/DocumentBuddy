@@ -24,7 +24,7 @@ class Sqlite:
     #   keywords (each keyword is inserted seperatly)
     # insertDataInMain - just inserts the Data in main
     # insertDataInKeyword - just insert the Data in keywords
-    def insert_data(self, link, keywords, text, doctype, toc, author, name_entities, pages, date):
+    def insert_data(self, link, keywords, text, doctype, toc, author, name_entities, pages: int, date):
         self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES "
                        "(?,?,?,?,?,?,?)",(link, text, doctype, toc, author, pages, date))
         self.c.execute("SELECT max(id) FROM main")

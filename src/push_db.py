@@ -9,6 +9,7 @@ files = [#"../exampleData/Unternehmensbefragung/Unternehmensbefragung-2017-–-K
 from textextraction import extract_frompdf
 from text_modeling import *
 from api.sqlite import Sqlite
+import time
 
 sql = Sqlite()
 
@@ -20,10 +21,12 @@ for file in files:
     pdf = extract_frompdf.extract_text(file)
     text = pdf['content'].strip()
     doctype = file.rsplit(".", 1)[1]
-    pages = pdf['metadata']['xmpTPg:NPages']
+    pages = int(pdf['metadata']['xmpTPg:NPages'])
     sql.insert_data_in_main(file, text, "pdf", "", "", "", pdf['metadata']['xmpTPg:NPages'], "")
     keywords = get_topics("test.pickle", "pickck.pkl", doc_id="doc"+str(i))
     entities = get_entities("pickck.pkl", doc_id="doc"+str(i))
     summary = get_summary(text=text, lang="german", count=10)
     date = extract_frompdf.get_creation_date(file)
-    sql.insert_data(file, keywords, summary, doctype,toc="", author="", name_entities=entities, pages=pages, date="")
+    sql.insert_data(file, keywords, summary, doctype, toc="", author="", name_entities=entities, pages=pages, date=date)
+    #sql.close_connection()
+    #link, keywords, text, doctype, toc, author, name_entities, pages, date
