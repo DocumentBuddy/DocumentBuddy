@@ -166,9 +166,6 @@ def se_id(id: int) -> str:
         return data[1]
 
 
-
-@app.route('/database/api/v1.0/documents/id/<int:id>', methods=['GET'])
-def select_id(id: int) -> int:
 # GET data from exact author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
 def get_data_from_author(author: str)->str:
