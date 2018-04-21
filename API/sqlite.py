@@ -63,6 +63,11 @@ class Sqlite:
         self.c.execute("SELECT * FROM {}".format(database_name))
         return self.c.fetchall()
 
+    # Select more keywords
+
+    # Select doctype
+
+
     # update
     # updateMain(link, ("updateRow1", "updateRow2"), ("updateValue1","updateValue2"))
     #       - will update the given rows with the given values
