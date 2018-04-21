@@ -10,3 +10,5 @@ pyphen
 lda
 tika
 pytesseract
+sumy
+pdfminer
