@@ -40,6 +40,13 @@ GET Request
 URL/database/api/v1.0/keywords/
 ```
 
+### Get all name_entities
+GET Request
+
+```
+URL/database/api/v1.0/names/
+```
+
 ### Get Documents by exact Keyword
 
 GET Request
@@ -56,7 +63,7 @@ GET Request
 URL/database/api/v1.0/keyword/like/<string:keyword>
 ```
 
-### Get Documents by  more than one Keyword
+### Get Documents by more than one Keyword
 
 POST Request
 
@@ -90,12 +97,36 @@ GET Request
 URL/database/api/v1.0/doctype/like/<string:doctype>
 ```
 
-### Get Documents by like name
+### Get Documents by exact name
 
 GET Request
 
 ```
 URL/database/api/v1.0/name/exact/<string:name>
+```
+
+### Get Documents by like name
+
+GET Request
+
+```
+URL/database/api/v1.0/name/like/<string:name>
+```
+
+### Get Summary by ID
+
+GET Request
+
+```
+URL/database/api/v1.0/summary/<int:id>
+```
+
+returns
+
+```
+{
+  "summary": "Hallo Hallo"
+}
 ```
 
 ## Insert Data

@@ -120,7 +120,7 @@ def select_keywords():
     for data in data_container:
         print(data)
         json_object = {'id': data[0], 'link': data[1], 'text': data[2], 'doctype': data[3], 'toc':
-            data[4], 'author':  data[5], 'name_entities':  data[6], 'pages':  data[7], 'date':  data[8]}
+            data[4], 'author':  data[5], 'pages':  data[6], 'date':  data[7]}
         json_objects.append(json_object)
     return jsonify(json_objects), 201
 
@@ -184,7 +184,7 @@ def select_id(id: int)-> str:
         json_objects.append(json_object)
     return jsonify(json_objects), 201
 
-# GET data from ID
+# GET summary from ID
 @app.route('/database/api/v1.0/summary/<int:id>', methods=['GET'])
 def select_text_from_id(id: int)-> str:
     data = get_db().select_text_from_id(id)
