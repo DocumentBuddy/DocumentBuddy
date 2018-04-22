@@ -251,15 +251,26 @@
             }
         </script>
         <script>
-            /*let client = new XMLHttpRequest();
-            client.open("GET","/database/api/v1.0/documents/getid",true); // Get file path
-            client.send();
-            client.onreadystatechange = function() {
-                if (client.responseText.length === 0){
-                    // Do nothing
-                } else {
-                }
-            };*/
+            let hallo = "/exampleData/EplusPDF.pdf";
+            window.setInterval(x=>{
+                let client = new XMLHttpRequest();
+                client.open("GET","/pdf/getid",true); // Get file path
+                client.send();
+                client.onreadystatechange = function() {
+                    try{
+                        let tmp = JSON.parse(client.responseText).path;
+                        if(tmp!=hallo){
+                            console.log(tmp!=hallo, tmp, hallo);
+                            document.getElementById("pdfframe").setAttribute("src", tmp + "#view=Fit");
+                            hallo = tmp;
+                        } else {
+                            console.log("hjfdahsd", hallo);
+                        }
+                    } catch(err) {
+
+                    }
+                };
+            },5000)
         </script>
         <div id="search" class="item4">
             <div id="searchHeader">Search</div>
@@ -277,7 +288,7 @@
                     <i class="fas fa-times"></i>
                 </span>
             </div>
-            <iframe src="{{ pdfpath }}#view=Fit"></iframe>
+            <iframe id="pdfframe" src="text.pdf#view=Fit"></iframe>
         </div>
     </body>
 </html>
