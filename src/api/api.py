@@ -147,7 +147,6 @@ def select_keywords():
     data_container = get_db().select_from_keywords(request.json['keywords'])
     json_objects=[]
     for data in data_container:
-        print(data)
         json_object = {'id': data[0], 'link': data[1], 'text': data[2], 'doctype': data[3], 'toc':
             data[4], 'author':  data[5], 'pages':  data[6], 'date':  data[7]}
         json_objects.append(json_object)
