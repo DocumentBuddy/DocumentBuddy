@@ -52,7 +52,6 @@ def hello_world():
 
 @app.route('/exampleData/<path:path>')
 def get_examplepdf(path):
-    print("hallo")
     return send_file(os.path.abspath("../exampleData/"+path))
 
 
@@ -65,6 +64,7 @@ def get_pdfid():
 def get_pdf(id):
     global pdfpath
     pdfpath = se_id(id)
+    return ("OK", 200)
 
 
 # Get all documents
