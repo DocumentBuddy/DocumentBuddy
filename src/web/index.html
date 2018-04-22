@@ -351,7 +351,7 @@
                         let possibleNewSrc = JSON.parse(client.responseText).path;
                         if (possibleNewSrc !== oldPdfSrc) {
                             document.getElementById("pdfViewFrame")
-                                .setAttribute("src", tmp + "#view=Fit");
+                                .setAttribute("src", possibleNewSrc + "#view=Fit");
                             oldPdfSrc = possibleNewSrc;
                             fadeIn()
                         }
