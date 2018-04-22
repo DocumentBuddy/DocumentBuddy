@@ -12,7 +12,7 @@ my_loader = jinja2.ChoiceLoader([
     jinja2.FileSystemLoader('web/'),
 ])
 app.jinja_loader = my_loader
-pdfpath = "test.pdf"
+pdfpath = "/exampleData/EplusPDF.pdf"
 
 def get_documents_by_keyword(keyword, is_like):
     if is_like:

@@ -310,16 +310,6 @@
                 }
             }
 
-            /*function httpGetAsync(url, callback) {
-                var xmlHttp = new XMLHttpRequest();
-                xmlHttp.onreadystatechange = function() {
-                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                        callback(xmlHttp.responseText);
-                };
-                xmlHttp.open("GET", url, true);
-                xmlHttp.send(null);
-            }*/
-
             function httpPostAsync(url, data) {
                 var request = new XMLHttpRequest();
                 request.onload = function () {
@@ -331,28 +321,6 @@
                 request.setRequestHeader("content-type", "application/json");
                 request.send(JSON.stringify({"keywords": data.split(" ")}));
             }
-        </script>
-        <script>
-            let hallo = "/exampleData/EplusPDF.pdf";
-            window.setInterval(x=>{
-                let client = new XMLHttpRequest();
-                client.open("GET","/pdf/getid",true); // Get file path
-                client.send();
-                client.onreadystatechange = function() {
-                    try{
-                        let tmp = JSON.parse(client.responseText).path;
-                        if(tmp!=hallo){
-                            console.log(tmp!=hallo, tmp, hallo);
-                            document.getElementById("pdfframe").setAttribute("src", tmp + "#view=Fit");
-                            hallo = tmp;
-                        } else {
-                            console.log("hjfdahsd", hallo);
-                        }
-                    } catch(err) {
-
-                    }
-                };
-            },5000)
         </script>
         <div id="search" class="item4">
             <div id="searchHeader">Search</div>
@@ -371,7 +339,26 @@
                     <i class="fas fa-times"></i>
                 </span>
             </div>
-            <iframe id="pdfframe"></iframe>
+            <iframe id="pdfViewFrame"></iframe>
         </div>
+        <script>
+            let oldPdfSrc = undefined;
+            window.setInterval(() => {
+                let client = new XMLHttpRequest();
+                client.open("GET", "/pdf/getid", true);
+                client.onreadystatechange = () => {
+                    try {
+                        let possibleNewSrc = JSON.parse(client.responseText).path;
+                        if (possibleNewSrc !== oldPdfSrc) {
+                            document.getElementById("pdfViewFrame")
+                                .setAttribute("src", tmp + "#view=Fit");
+                            oldPdfSrc = possibleNewSrc;
+                            fadeIn()
+                        }
+                    } catch(err) {}
+                };
+                client.send();
+            }, 5000)
+        </script>
     </body>
 </html>
