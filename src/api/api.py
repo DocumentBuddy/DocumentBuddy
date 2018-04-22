@@ -165,8 +165,11 @@ def se_id(id: int) -> str:
     json_objects=[]
     for data in data_container:
         print(data)
-        return data[1]
+        return translate_text(data[1])
 
+def translate_text(text):
+    udata = text.decode("utf-8")
+    return udata.encode("latin-1","ignore")
 
 # GET data from exact author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
