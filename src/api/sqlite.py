@@ -81,7 +81,7 @@ class Sqlite:
 
     # Select more keywords
     def select_from_keywords(self, keywords):
-        data =[]
+        data = []
         for keyword in keywords:
             self.c.execute("SELECT DISTINCT id FROM keywords WHERE keyword LIKE ?", ('%' + keyword + '%',))
             data.append(self.c.fetchall())
@@ -96,6 +96,26 @@ class Sqlite:
             self.c.execute("SELECT * FROM main WHERE ID = ?", (item,))
             return_data.append(self.c.fetchone())
         return return_data
+
+
+    # Select more places
+    def select_from_places(self, places):
+        data = []
+        for place in places:
+            self.c.execute("SELECT DISTINCT id FROM places WHERE place LIKE ?", ('%' + place + '%',))
+            data.append(self.c.fetchall())
+            data = list(itertools.chain.from_iterable(data))
+            data = [list(i) if isinstance(i, tuple) else [i] for i in data]
+            newdata = []
+            for d in data:
+                newdata.append(d[0])
+        newdata=list(set(newdata))
+        return_data = []
+        for item in newdata:
+            self.c.execute("SELECT * FROM main WHERE ID = ?", (item,))
+            return_data.append(self.c.fetchone())
+        return return_data
+
 
     #select any database
     def select_all(self, database_name):

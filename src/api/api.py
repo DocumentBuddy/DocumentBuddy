@@ -217,9 +217,9 @@ def select_text_from_id(id: int)-> str:
 # GET data from many places
 @app.route('/database/api/v1.0/places/many/', methods=['POST'])
 def select_places():
-    if not request.json or 'place' not in request.json:
+    if not request.json or 'places' not in request.json:
         abort(400)
-    data_container = get_db().select_from_places(request.json['place'])
+    data_container = get_db().select_from_places(request.json['places'])
     json_objects=[]
     for data in data_container:
         print(data)
