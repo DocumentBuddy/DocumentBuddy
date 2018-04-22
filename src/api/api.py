@@ -161,7 +161,7 @@ def get_all_names():
 
 
 def translate_text(text):
-    return str(text.encode("latin-1","ignore"))
+    return str(text.encode("latin-1","ignore"),"latin-1")
 
 
 def se_id(id: int) -> str:
