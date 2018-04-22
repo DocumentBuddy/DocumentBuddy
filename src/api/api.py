@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, abort, request, g, render_template, send_file, send_from_directory,redirect
 import sqlite3
 import jinja2
+import os
 
 from api.sqlite import Sqlite
 
@@ -11,7 +12,7 @@ my_loader = jinja2.ChoiceLoader([
     jinja2.FileSystemLoader('web/'),
 ])
 app.jinja_loader = my_loader
-
+pdfpath = "test.pdf"
 
 def get_documents_by_keyword(keyword, is_like):
     if is_like:
@@ -41,30 +42,32 @@ def get_documents_by_name(name, is_like):
 
 @app.route('/')
 def hello_world():
-    print(g.pdfpath)
-    return render_template('index.html',  pdfpath="test.pdf")
+    global pdfpath
+    print(pdfpath)
+    return render_template('index.html',  pdfpath=pdfpath)
     # return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
 
 @app.route('/exampleData/<path:path>')
 def get_examplepdf(path):
     print("hallo")
-    return send_file("../../exampleData/"+path)
+    return send_file(os.path.abspath("../exampleData/"+path))
 
+
+@app.route('/pdf/getid', methods=['GET'])
+def get_pdfid():
+    global pdfpath
+    return jsonify({"path":pdfpath})
 
 @app.route('/<path:path>')
 def get_ressources(path):
     print("hallo")
-    return send_file("../web/"+path)
+    return send_file(os.path.abspath("web/"+path))
 
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
-    g.pdfpath = se_id(id)
+    global pdfpath
+    pdfpath = se_id(id)
     return redirect('/')
-
-@app.route('/pdf/getid', methods=['POST'])
-def get_pdf(id):
-    g.pdfpath = se_id(id)
-    return jsonify({"path":g.pdfpath})
 
 
 # Get all documents
@@ -160,6 +163,7 @@ def get_all_names():
     return jsonify(json_objects)
 
 def se_id(id: int) -> str:
+    print(id)
     data_container = get_db().select_from_id(id)
     json_objects=[]
     for data in data_container:
