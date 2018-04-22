@@ -289,22 +289,20 @@
             }
 
             function createContent(responseText) {
-                document.getElementById("searchResults").innerHTML = "";
+                //document.getElementById("searchResults").innerHTML = "";
                 for(var i = 0; i < responseText.length; i++) {
                     var div = document.createElement("div");
                     var divTitle = document.createElement("div");
                     var divDate = document.createElement("div");
                     var divAuthor = document.createElement("div");
-                    var divShowPdf = document.createElement("div");
                     div.className = "searchResult";
                     divTitle.className = "searchResultTitle";
                     divDate.className = "searchResultDate";
                     divAuthor.className = "searchResultAuthor";
-                    divShowPdf.className = "";
                     var title = responseText[i].link.split("/");
                     divTitle.innerText = title[title.length - 1];
-                    divDate.innerText += "added on " + responseText[i].date + "  \u25AA  " + responseText[i].pages + " Pages";
-                    divAuthor.innerText += "By " + responseText[i].author;
+                    divDate.innerText = "added on " + responseText[i].date + "  \u25AA  " + responseText[i].pages + " Pages";
+                    divAuthor.innerHTML = '<div class="searchResultAuthor has-icon-right">By ' + responseText[i].author + '<span class="icon is-medium is-right" onclick=""><i class="fas fa-eye"></i></span></div>';
                     div.appendChild(divTitle);
                     div.appendChild(divDate);
                     div.appendChild(divAuthor);
@@ -362,7 +360,7 @@
                     <i class="fas fa-times"></i>
                 </span>
             </div>
-            <iframe src="test.pdf#view=Fit"></iframe>
+            <iframe src=""></iframe>
         </div>
     </body>
 </html>
