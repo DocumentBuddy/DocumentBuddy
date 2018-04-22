@@ -21,6 +21,16 @@ from sumy.utils import get_stop_words
 
 #from sqlite import sqlite
 from textextraction.extract_frompdf import extract_text
+import pandas as pd
+df = pd.read_table("textextraction/city_list.txt")
+countries = pd.read_csv("textextraction/country.csv", sep=",", header=0)["value"].str.lower().tolist()
+cities_global = df["nm"].str.lower().tolist()
+zip_csv = pd.read_csv("textextraction/German-Zip-Codes.csv", sep=";", header=0)
+cities_germany = zip_csv["Ort"].drop_duplicates() #?
+german_states = zip_csv["Bundesland"].drop_duplicates().str.lower().tolist()
+german_reg = [line.rstrip('\n') for line in open('textextraction/regions-german')]
+
+places = countries + cities_global + german_states + german_reg
 
 
 def save_obj(obj):
@@ -104,6 +114,9 @@ def get_entities(pretoken_path: str, doc_id: str):
     pos_ne = set([t[0] for t in pretoken[doc_id] if t[1]=='NE'])
     return pos_ne
 
+def get_places(e):
+    return list(filter(lambda x: x in places, e))
+
 
 def get_noms(pretoken_path: str, doc_id: str):
     pretoken = load_obj(pretoken_path)  # "pickck.pkl"
@@ -167,7 +180,9 @@ if __name__ == '__main__':
 
     # train_model()
     print(get_topics("test.pickle", "pickck.pkl", doc_id="doc1"))
-    print(get_entities("pickck.pkl", doc_id="doc1"))
-    text = extract_text(files[0])
+    e = get_entities("pickck.pkl", doc_id="doc1")
+    print(e)
+    print(get_places(e))
+    text = extract_text(files[0])['content'].strip()
     print(get_summary(text=text, lang=LANGUAGE, count=SENTENCES_COUNT))
 
