@@ -64,7 +64,7 @@ def get_pdfid():
 def get_pdf(id):
     global pdfpath
     pdfpath = se_id(int(id))
-    return ("OK", 200)
+    return "OK", 200
 
 
 # Get all documents
@@ -161,7 +161,7 @@ def get_all_names():
 
 
 def translate_text(text):
-    return text.encode("latin-1","ignore")
+    return str(text.encode("latin-1","ignore"))
 
 
 def se_id(id: int) -> str:
