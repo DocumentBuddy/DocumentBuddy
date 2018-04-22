@@ -58,11 +58,6 @@ def get_pdfid():
     global pdfpath
     return jsonify({"path":pdfpath})
 
-@app.route('/<path:path>')
-def get_ressources(path):
-    print("hallo")
-    return send_file(os.path.abspath("web/"+path))
-
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
     global pdfpath
@@ -267,6 +262,11 @@ def insert_documents():
                        'pages':  request.json['pages'],
                        'date':  request.json['date']}
     return jsonify(json_object), 201
+
+
+@app.route('/<string:path>')
+def get_ressources(path):
+    return send_file(os.path.abspath("web/"+path))
 
 
 def get_db():
