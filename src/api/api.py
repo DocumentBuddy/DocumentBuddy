@@ -15,7 +15,7 @@ my_loader = jinja2.ChoiceLoader([
     jinja2.FileSystemLoader('web/'),
 ])
 app.jinja_loader = my_loader
-pdfpath = "/exampleData/EplusPDF.pdf"
+pdfpath = None
 
 def get_documents_by_keyword(keyword, is_like):
     if is_like:
@@ -63,8 +63,8 @@ def get_pdfid():
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
     global pdfpath
-    pdfpath = se_id(id)
-    return ("OK", 200)
+    pdfpath = se_id(int(id))
+    return "OK", 200
 
 
 # Get all documents
@@ -159,14 +159,17 @@ def get_all_names():
         json_objects.append(json_object)
     return jsonify(json_objects)
 
+
+def translate_text(text):
+    return str(text.encode("latin-1","ignore"),"latin-1")
+
+
 def se_id(id: int) -> str:
     print(id)
     data_container = get_db().select_from_id(id)
     json_objects=[]
     for data in data_container:
-        print(data)
-        return data[1]
-
+        return translate_text(data[1])
 
 # GET data from exact author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
