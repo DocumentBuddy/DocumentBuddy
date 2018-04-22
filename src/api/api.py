@@ -62,6 +62,7 @@ def hello_world():
     return render_template('index.html',  pdfpath=pdfpath)
     # return '<center><h1>It works!</h1> <br> <h2>Sincerely yours, DocumentBuddy</h2></center>'
 
+
 @app.route('/exampleData/<path:path>')
 def get_examplepdf(path):
     return send_file(os.path.abspath("../exampleData/"+path))
@@ -71,6 +72,7 @@ def get_examplepdf(path):
 def get_pdfid():
     global pdfpath
     return jsonify({"path":pdfpath})
+
 
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
@@ -89,13 +91,6 @@ def get_all_documents():
             document[4], 'author': document[5], 'pages': document[6], 'date': document[7]}
         json_objects.append(json_object)
     return jsonify(json_objects)
-
-
-# Delete :(
-@app.route('/database/api/v1.0/documents/delete/all', methods=['GET'])
-def delete_all_documents():
-    get_db().truncate_database('main')
-    return 204
 
 
 # GET data from exact keyword
@@ -203,7 +198,7 @@ def se_id(id: int) -> str:
     for data in data_container:
         return translate_text(data[1])
 
-# GET data from exact author
+# GET data from like author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
 def get_data_from_author(author: str)->str:
     documents = get_db().select_like_from_author(author)
@@ -215,7 +210,7 @@ def get_data_from_author(author: str)->str:
     return jsonify(json_objects), 201
 
 
-# GET data from like author
+# GET data from like doctype
 @app.route('/database/api/v1.0/doctype/like/<string:doctype>', methods=['GET'])
 def get_data_from_doctype(doctype: str)->str:
     documents = get_db().select_like_from_doctype(doctype)
