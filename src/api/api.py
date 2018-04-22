@@ -63,7 +63,7 @@ def get_pdfid():
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
     global pdfpath
-    pdfpath = se_id(id)
+    pdfpath = se_id(int(id))
     return ("OK", 200)
 
 
@@ -159,16 +159,17 @@ def get_all_names():
         json_objects.append(json_object)
     return jsonify(json_objects)
 
+
+def translate_text(text):
+    return text.encode("latin-1","ignore")
+
+
 def se_id(id: int) -> str:
     print(id)
     data_container = get_db().select_from_id(id)
     json_objects=[]
     for data in data_container:
         return translate_text(data[1])
-
-def translate_text(text):
-    udata = text.decode("utf-8")
-    return udata.encode("latin-1","ignore")
 
 # GET data from exact author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
