@@ -24,7 +24,7 @@ class Sqlite:
     #   keywords (each keyword is inserted seperatly)
     # insertDataInMain - just inserts the Data in main
     # insertDataInKeyword - just insert the Data in keywords
-    def insert_data(self, link, keywords, text, doctype, toc, author, places, pages, date):
+    def insert_data(self, link, keywords, text, doctype, toc, author, name_entities, pages, date, places):
         print((link, text, doctype, toc, author, pages, date,))
         print(len((link, text, doctype, toc, author, pages, date,)))
         self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES (?,?,?,?,?,?,?)",
@@ -35,6 +35,8 @@ class Sqlite:
             self.c.execute('INSERT INTO keywords (id, keyword) VALUES ("{}" , "{}")'.format(id[0],keyword))
         for place in places:
             self.c.execute('INSERT INTO places (id, place) VALUES ("{}" , "{}")'.format(id[0],place))
+        for name in name_entities:
+            self.c.execute('INSERT INTO names (id, name) VALUES ("{}" , "{}")'.format(id[0],name))
 
     def insert_data_in_main(self, link, text, doctype, toc, author, places, pages, date):
         self.c.execute("INSERT INTO main (link, text, doctype, toc, author, pages, date) VALUES (?,?,?,?,?,?,?)",
@@ -79,6 +81,16 @@ class Sqlite:
         self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM places WHERE place="{}")'.format(place))
         return self.c.fetchall()
 
+
+    def select_all_including_name(self, name):
+        self.c.execute("SELECT * FROM main WHERE id IN (SELECT DISTINCT id FROM names WHERE name LIKE ?)", ('%' + name + '%',))
+        return self.c.fetchall()
+
+
+    def select_all_precise_by_name(self, name):
+        self.c.execute('SELECT * FROM main WHERE id IN (SELECT id FROM names WHERE name="{}")'.format(name))
+        return self.c.fetchall()
+
     # Select more keywords
     def select_from_keywords(self, keywords):
         data = []
@@ -116,6 +128,23 @@ class Sqlite:
             return_data.append(self.c.fetchone())
         return return_data
 
+    # Select more name_entities
+    def select_from_names(self, names):
+        data = []
+        for name in names:
+            self.c.execute("SELECT DISTINCT id FROM names WHERE name LIKE ?", ('%' + name + '%',))
+            data.append(self.c.fetchall())
+            data = list(itertools.chain.from_iterable(data))
+            data = [list(i) if isinstance(i, tuple) else [i] for i in data]
+            newdata = []
+            for d in data:
+                newdata.append(d[0])
+        newdata=list(set(newdata))
+        return_data = []
+        for item in newdata:
+            self.c.execute("SELECT * FROM main WHERE ID = ?", (item,))
+            return_data.append(self.c.fetchone())
+        return return_data
 
     #select any database
     def select_all(self, database_name):
@@ -172,6 +201,11 @@ class Sqlite:
     def create_table_places(self):
         self.c.execute("CREATE TABLE IF NOT EXISTS places (id INTEGER, place text, "
                        "FOREIGN KEY(id) REFERENCES main(ID), PRIMARY  KEY (id, place))")
+
+
+    def create_table_names(self):
+        self.c.execute("CREATE TABLE IF NOT EXISTS names (id INTEGER, name text, "
+                       "FOREIGN KEY(id) REFERENCES main(ID), PRIMARY  KEY (id, name))")
 
     # Drop Tables
     def drop_table(self, database_name):
