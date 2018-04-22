@@ -322,25 +322,6 @@
                 request.send(JSON.stringify({"keywords": data.split(" ")}));
             }
         </script>
-        <script>
-            let oldPdfSrc = undefined;
-            window.setInterval(() => {
-                let client = new XMLHttpRequest();
-                client.open("GET", "/pdf/getid", true);
-                client.onreadystatechange = () => {
-                    try {
-                        let possibleNewSrc = JSON.parse(client.responseText).path;
-                        if (possibleNewSrc !== oldPdfSrc) {
-                            document.getElementById("pdfframe")
-                                .setAttribute("src", tmp + "#view=Fit");
-                            oldPdfSrc = possibleNewSrc;
-                            fadeIn()
-                        }
-                    } catch(err) {}
-                };
-                client.send();
-            }, 5000)
-        </script>
         <div id="search" class="item4">
             <div id="searchHeader">Search</div>
             <div id="searchBar" class="control has-icons-right">
@@ -358,7 +339,26 @@
                     <i class="fas fa-times"></i>
                 </span>
             </div>
-            <iframe id="pdfframe"></iframe>
+            <iframe id="pdfViewFrame"></iframe>
         </div>
+        <script>
+            let oldPdfSrc = undefined;
+            window.setInterval(() => {
+                let client = new XMLHttpRequest();
+                client.open("GET", "/pdf/getid", true);
+                client.onreadystatechange = () => {
+                    try {
+                        let possibleNewSrc = JSON.parse(client.responseText).path;
+                        if (possibleNewSrc !== oldPdfSrc) {
+                            document.getElementById("pdfViewFrame")
+                                .setAttribute("src", tmp + "#view=Fit");
+                            oldPdfSrc = possibleNewSrc;
+                            fadeIn()
+                        }
+                    } catch(err) {}
+                };
+                client.send();
+            }, 5000)
+        </script>
     </body>
 </html>
