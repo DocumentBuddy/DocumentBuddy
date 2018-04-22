@@ -30,11 +30,11 @@ def get_documents_by_keyword(keyword, is_like):
     return jsonify(json_objects)
 
 
-def get_documents_by_name(name, is_like):
+def get_documents_by_place(place, is_like):
     if is_like:
-        documents = get_db().select_all_including_name(name)
+        documents = get_db().select_all_including_place(place)
     else:
-        documents = get_db().select_all_precise_by_name(name)
+        documents = get_db().select_all_precise_by_place(place)
     json_objects = []
     for document in documents:
         json_object = {'id': document[0], 'link': document[1], 'text': document[2], 'doctype': document[3], 'toc':
@@ -98,16 +98,16 @@ def get_documents_by_keyword_like(keyword):
     return get_documents_by_keyword(keyword, True)
 
 
-# GET data from exact name (name_entities)
-@app.route('/database/api/v1.0/name/exact/<string:name>', methods=['GET'])
-def get_documents_by_name_exact(name: str) -> str:
-    return get_documents_by_name(name, False)
+# GET data from exact place (places)
+@app.route('/database/api/v1.0/place/exact/<string:place>', methods=['GET'])
+def get_documents_by_place_exact(place: str) -> str:
+    return get_documents_by_place(place, False)
 
 
-# GET data from like name (name_entities)
-@app.route('/database/api/v1.0/name/like/<string:name>', methods=['GET'])
-def get_documents_by_name_like(name: str) -> str:
-    return get_documents_by_name(name, True)
+# GET data from like place (places)
+@app.route('/database/api/v1.0/place/like/<string:place>', methods=['GET'])
+def get_documents_by_place_like(place: str) -> str:
+    return get_documents_by_place(place, True)
 
 
 # GET all keywords
@@ -149,13 +149,13 @@ def insert_keywords():
         return jsonify(json_object), 201
 
 
-# GET all names
-@app.route('/database/api/v1.0/names/', methods=['GET'])
-def get_all_names():
-    documents = get_db().select_all('names')
+# GET all places
+@app.route('/database/api/v1.0/places/', methods=['GET'])
+def get_all_places():
+    documents = get_db().select_all('places')
     json_objects = []
     for document in documents:
-        json_object = {'id': document[0], 'name': document[1]}
+        json_object = {'id': document[0], 'place': document[1]}
         json_objects.append(json_object)
     return jsonify(json_objects)
 
@@ -214,12 +214,12 @@ def select_text_from_id(id: int)-> str:
     json_object = {'summary': data[0]}
     return jsonify(json_object), 201
 
-# GET data from many names
-@app.route('/database/api/v1.0/names/many/', methods=['POST'])
-def select_names():
-    if not request.json or 'name' not in request.json:
+# GET data from many places
+@app.route('/database/api/v1.0/places/many/', methods=['POST'])
+def select_places():
+    if not request.json or 'places' not in request.json:
         abort(400)
-    data_container = get_db().select_from_names(request.json['name'])
+    data_container = get_db().select_from_places(request.json['places'])
     json_objects=[]
     for data in data_container:
         print(data)
@@ -233,19 +233,19 @@ def select_names():
 @app.route('/database/api/v1.0/documents/insert/', methods=['POST'])
 def insert_documents():
     if not request.json or 'link' not in request.json or 'text' not in request.json or 'doctype' not in request.json \
-            or 'toc' not in request.json or 'author' not in request.json or 'name_entities' not in request.json \
+            or 'toc' not in request.json or 'author' not in request.json or 'places' not in request.json \
             or 'pages' not in request.json or 'date' not in request.json:
         abort(400)
     if 'keywords' not in request.json:
         get_db().insert_data_in_main(request.json['link'], request.json['text'], request.json['doctype'],
-                                     request.json['toc'], request.json['author'], request.json['name_entities'],
+                                     request.json['toc'], request.json['author'], request.json['places'],
                                      request.json['pages'], request.json['date'])
         json_object = {'link': request.json['link'],
                        'text': request.json['text'],
                        'doctype': request.json['doctype'],
                        'toc': request.json['toc'],
                        'author':  request.json['author'],
-                       'name_entities':  request.json['name_entities'],
+                       'places':  request.json['places'],
                        'pages':  request.json['pages'],
                        'date':  request.json['date']}
     else:
@@ -255,7 +255,7 @@ def insert_documents():
         #print(keywords)
         #print(request.json['link'])
         get_db().insert_data(request.json['link'], keywords, request.json['text'], request.json['doctype'],
-                             request.json['toc'], request.json['author'], request.json['name_entities'],
+                             request.json['toc'], request.json['author'], request.json['places'],
                              request.json['pages'], request.json['date'])
         json_object = {'link': request.json['link'],
                        'text': request.json['text'],
@@ -263,7 +263,7 @@ def insert_documents():
                        'doctype': request.json['doctype'],
                        'toc': request.json['toc'],
                        'author':  request.json['author'],
-                       'name_entities':  request.json['name_entities'],
+                       'places':  request.json['places'],
                        'pages':  request.json['pages'],
                        'date':  request.json['date']}
     return jsonify(json_object), 201

@@ -5,8 +5,8 @@ import platform
 import os
 from tika import parser
 from pdfminer.pdfparser import PDFParser
-from pdfminer.pdfdocument import PDFDocument
-import PyPDF2
+#from pdfminer.pdfdocument import PDFDocument
+#import PyPDF2
 
 
 def extract_text(path):
@@ -25,10 +25,11 @@ def extract_text(path):
     #data=udata.encode("latin-1","ignore")
 
 def get_metadata(path):
-    fp = open(path, 'rb')
-    parser = PDFParser(fp)
-    doc = PDFDocument(parser)
-    return doc.info[0] if not len(doc.info) == 0 else {}
+    #fp = open(path, 'rb')
+    #parser = PDFParser(fp)
+    #doc = PDFDocument(parser)
+    #return doc.info[0] if not len(doc.info) == 0 else {}
+    pass
 
 """
 def extract_images(path):
