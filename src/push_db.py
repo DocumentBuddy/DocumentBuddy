@@ -26,8 +26,9 @@ for file in files:
     entities = get_entities("pickck.pkl", doc_id="doc"+str(i))
     summary = get_summary(text=text, lang="german", count=10)
     date = extract_frompdf.get_creation_date(file)
+    places = get_places(entities)
     sql.insert_data(file[2:], keywords, summary, doctype, toc="", author="",
-                    name_entities=entities, pages=pages, date=date)
+                    name_entities=entities, pages=pages, date=date, places=places)
     #sql.insert_data("a", ["a"], "a", "a", toc="a", author="a",
     #                name_entities=["a"], pages=0, date="a")
 
