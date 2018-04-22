@@ -33,7 +33,8 @@ print("**************************************************")
 #pprint.pprint(sqlite.select_all_including_name('Name'))
 print(sqlite.select_link_from_id(1))
 
-#sqlite.truncateDatabase('main')
-#sqlite.truncateDatabase('keywords')
+sqlite.truncateDatabase('main')
+sqlite.truncateDatabase('keywords')
+sqlite.truncateDatabase('names')
 # handle end of connection
 sqlite.close_connection()

@@ -3,16 +3,19 @@ import sqlite3
 import jinja2
 import os
 
+from flask_cors import CORS
+
 from api.sqlite import Sqlite
 
 
 app = Flask(__name__)
+CORS(app)
 my_loader = jinja2.ChoiceLoader([
     app.jinja_loader,
     jinja2.FileSystemLoader('web/'),
 ])
 app.jinja_loader = my_loader
-pdfpath = "test.pdf"
+pdfpath = None
 
 def get_documents_by_keyword(keyword, is_like):
     if is_like:
@@ -49,7 +52,6 @@ def hello_world():
 
 @app.route('/exampleData/<path:path>')
 def get_examplepdf(path):
-    print("hallo")
     return send_file(os.path.abspath("../exampleData/"+path))
 
 
@@ -58,16 +60,11 @@ def get_pdfid():
     global pdfpath
     return jsonify({"path":pdfpath})
 
-@app.route('/<path:path>')
-def get_ressources(path):
-    print("hallo")
-    return send_file(os.path.abspath("web/"+path))
-
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
     global pdfpath
-    pdfpath = se_id(id)
-    return redirect('/')
+    pdfpath = se_id(int(id))
+    return "OK", 200
 
 
 # Get all documents
@@ -163,14 +160,16 @@ def get_all_places():
     return jsonify(json_objects)
 
 
+def translate_text(text):
+    return str(text.encode("latin-1","ignore"),"latin-1")
+
+
 def se_id(id: int) -> str:
     print(id)
     data_container = get_db().select_from_id(id)
     json_objects=[]
     for data in data_container:
-        print(data)
-        return data[1]
-
+        return translate_text(data[1])
 
 # GET data from exact author
 @app.route('/database/api/v1.0/author/like/<string:author>', methods=['GET'])
@@ -268,6 +267,11 @@ def insert_documents():
                        'pages':  request.json['pages'],
                        'date':  request.json['date']}
     return jsonify(json_object), 201
+
+
+@app.route('/<string:path>')
+def get_ressources(path):
+    return send_file(os.path.abspath("web/"+path))
 
 
 def get_db():

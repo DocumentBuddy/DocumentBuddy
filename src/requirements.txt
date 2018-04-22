@@ -11,4 +11,5 @@ lda
 tika
 pytesseract
 sumy
-sklearn
+pdfminer.six
+flask-cors
