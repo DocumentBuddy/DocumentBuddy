@@ -225,8 +225,9 @@
             line-height: 23px;
         }
 
-        .searchResultAuthor span {
+        .icon-eye {
             float: right;
+            cursor:pointer;
         }
     </style>
 </head>
@@ -308,7 +309,7 @@
                     divTitle.innerText = title[title.length - 1];
                     divTitle.title = title[title.length - 1];
                     divDate.innerText = "added on " + responseText[i].date + "  \u25AA  " + responseText[i].pages + " Pages";
-                    divAuthor.innerHTML = '<div class="searchResultAuthor has-icon-right">By ' + responseText[i].author + '<span class="icon is-medium is-right" onclick="httpPostAsync(\'/pdf/' + responseText[i].id + '\'' + ', \'\', true);"><i class="fas fa-eye"></i></span></div>';
+                    divAuthor.innerHTML = '<div class="searchResultAuthor has-icon-right">By ' + responseText[i].author + '<span class="icon-eye icon is-medium is-right" onclick="httpPostAsync(\'/pdf/' + responseText[i].id + '\'' + ', \'\', true);"><i class="fas fa-eye"></i></span></div>';
                     div.appendChild(divTitle);
                     div.appendChild(divDate);
                     div.appendChild(divAuthor);
