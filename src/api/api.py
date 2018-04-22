@@ -3,10 +3,13 @@ import sqlite3
 import jinja2
 import os
 
+from flask_cors import CORS
+
 from api.sqlite import Sqlite
 
 
 app = Flask(__name__)
+CORS(app)
 my_loader = jinja2.ChoiceLoader([
     app.jinja_loader,
     jinja2.FileSystemLoader('web/'),
@@ -62,7 +65,6 @@ def get_pdfid():
 def get_pdf(id):
     global pdfpath
     pdfpath = se_id(id)
-    return redirect('/')
 
 
 # Get all documents

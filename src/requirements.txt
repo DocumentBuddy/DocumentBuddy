@@ -12,3 +12,4 @@ tika
 pytesseract
 sumy
 pdfminer.six
+flask-cor
