@@ -342,14 +342,14 @@
             <iframe id="pdfViewFrame"></iframe>
         </div>
         <script>
-            let oldPdfSrc = undefined;
+            let oldPdfSrc = null;
             window.setInterval(() => {
                 let client = new XMLHttpRequest();
                 client.open("GET", "/pdf/getid", true);
                 client.onreadystatechange = () => {
                     try {
                         let possibleNewSrc = JSON.parse(client.responseText).path;
-                        if (possibleNewSrc !== oldPdfSrc) {
+                        if (possibleNewSrc != oldPdfSrc) {
                             document.getElementById("pdfViewFrame")
                                 .setAttribute("src", possibleNewSrc + "#view=Fit");
                             oldPdfSrc = possibleNewSrc;
