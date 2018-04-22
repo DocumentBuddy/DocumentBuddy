@@ -164,7 +164,6 @@ def se_id(id: int) -> str:
     data_container = get_db().select_from_id(id)
     json_objects=[]
     for data in data_container:
-        print(data)
         return translate_text(data[1])
 
 def translate_text(text):
