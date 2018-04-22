@@ -3,10 +3,13 @@ import sqlite3
 import jinja2
 import os
 
+from flask_cors import CORS
+
 from api.sqlite import Sqlite
 
 
 app = Flask(__name__)
+CORS(app)
 my_loader = jinja2.ChoiceLoader([
     app.jinja_loader,
     jinja2.FileSystemLoader('web/'),
@@ -49,7 +52,6 @@ def hello_world():
 
 @app.route('/exampleData/<path:path>')
 def get_examplepdf(path):
-    print("hallo")
     return send_file(os.path.abspath("../exampleData/"+path))
 
 
@@ -58,16 +60,11 @@ def get_pdfid():
     global pdfpath
     return jsonify({"path":pdfpath})
 
-@app.route('/<path:path>')
-def get_ressources(path):
-    print("hallo")
-    return send_file(os.path.abspath("web/"+path))
-
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
     global pdfpath
     pdfpath = se_id(id)
-    return redirect('/')
+    return ("OK", 200)
 
 
 # Get all documents
@@ -267,6 +264,11 @@ def insert_documents():
                        'pages':  request.json['pages'],
                        'date':  request.json['date']}
     return jsonify(json_object), 201
+
+
+@app.route('/<string:path>')
+def get_ressources(path):
+    return send_file(os.path.abspath("web/"+path))
 
 
 def get_db():

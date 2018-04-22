@@ -22,12 +22,14 @@ for file in files:
     text = pdf['content'].strip()
     doctype = file.rsplit(".", 1)[1]
     pages = int(pdf['metadata']['xmpTPg:NPages'])
-    sql.insert_data_in_main(file, text, "pdf", "", "", "", pdf['metadata']['xmpTPg:NPages'], "")
     keywords = get_topics("test.pickle", "pickck.pkl", doc_id="doc"+str(i))
     entities = get_entities("pickck.pkl", doc_id="doc"+str(i))
     summary = get_summary(text=text, lang="german", count=10)
     date = extract_frompdf.get_creation_date(file)
-    sql.insert_data(file[2:], keywords, summary, doctype, toc="", author="", name_entities=entities, pages=pages, date=date)
+    sql.insert_data(file[2:], keywords, summary, doctype, toc="", author="",
+                    name_entities=entities, pages=pages, date=date)
+    #sql.insert_data("a", ["a"], "a", "a", toc="a", author="a",
+    #                name_entities=["a"], pages=0, date="a")
 
 sql.close_connection()
     #link, keywords, text, doctype, toc, author, name_entities, pages, date
