@@ -61,7 +61,7 @@ def get_pdfid():
 @app.route('/<path:path>')
 def get_ressources(path):
     print("hallo")
-    return send_file(os.path.abspath("../web/"+path))
+    return send_file(os.path.abspath("web/"+path))
 
 @app.route('/pdf/<int:id>', methods=['POST'])
 def get_pdf(id):
